@@ -1,1 +1,40 @@
-<mxfile host="app.diagrams.net" modified="2021-12-07T19:33:14.168Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36" version="15.9.1" etag="TlJAY5dutXXkR4zaUL4q" type="github"><diagram id="6hAYTTRBaILiwH77Zhsj">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-12-07T19:36:32.859Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36" etag="VNcvwqp_ztssu6lSeHL_" version="15.9.1" type="github">
+  <diagram id="6hAYTTRBaILiwH77Zhsj" name="Page-1">
+    <mxGraphModel dx="1278" dy="579" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="wSp2iNZZjNFEHcvXALjO-1" target="wSp2iNZZjNFEHcvXALjO-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-1" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="370" y="30" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-2" value="View transaction history&lt;br&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="30" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="wSp2iNZZjNFEHcvXALjO-3" target="wSp2iNZZjNFEHcvXALjO-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-3" value="Request transaction history" style="whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="325" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="wSp2iNZZjNFEHcvXALjO-8" target="wSp2iNZZjNFEHcvXALjO-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-8" value="&lt;br&gt;Send request to DB" style="whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="325" y="410" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="wSp2iNZZjNFEHcvXALjO-10" target="wSp2iNZZjNFEHcvXALjO-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-10" value="&lt;br&gt;Send data UI&lt;br&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="325" y="600" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wSp2iNZZjNFEHcvXALjO-12" value="Redirect user to transaction history&lt;br&gt;" style="whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="325" y="780" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
