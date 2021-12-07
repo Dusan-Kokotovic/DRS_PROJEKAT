@@ -1,1 +1,36 @@
-<mxfile host="app.diagrams.net" modified="2021-12-07T19:15:59.383Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36" version="15.9.1" etag="_Dryp8oxWZh603JT3NbG" type="github"><diagram id="YNwXa24NIimwJRCd0J7q">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-12-07T19:22:17.608Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36" etag="INqbatKEim46iHY6Q7qZ" version="15.9.1" type="github">
+  <diagram id="YNwXa24NIimwJRCd0J7q" name="Page-1">
+    <mxGraphModel dx="1278" dy="579" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sTAFIwCw5A7Bw2YbVpDi-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="sTAFIwCw5A7Bw2YbVpDi-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="385" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sTAFIwCw5A7Bw2YbVpDi-3" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="370" y="40" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sTAFIwCw5A7Bw2YbVpDi-5" value="Check status" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sTAFIwCw5A7Bw2YbVpDi-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="sTAFIwCw5A7Bw2YbVpDi-9" target="sTAFIwCw5A7Bw2YbVpDi-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sTAFIwCw5A7Bw2YbVpDi-9" value="Request account data info" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="325" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sTAFIwCw5A7Bw2YbVpDi-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="sTAFIwCw5A7Bw2YbVpDi-10" target="sTAFIwCw5A7Bw2YbVpDi-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sTAFIwCw5A7Bw2YbVpDi-10" value="Pull data from DB&lt;br&gt;" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="325" y="410" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sTAFIwCw5A7Bw2YbVpDi-12" value="Send to UI" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="325" y="570" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
