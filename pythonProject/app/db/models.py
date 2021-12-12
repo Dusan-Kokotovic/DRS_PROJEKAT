@@ -11,10 +11,13 @@ class User(db.Model):
     country = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), nullable=False)
     phone = db.Column(db.String(12), nullable=False)
-    cards = db.relationship('Card', backref='user_owns')
+    card = db.relationship('Card', backref='user_owns')
     account = db.relationship('Account', backref='user', uselist='False')
-    sent_transactions = db.relationship('Transaction', backref='sender')
-    received_transactions = db.relationship('Transaction', backref='receiver')
+
+    sent_transactions = db.relationship('Transaction', backref='sender', lazy='dynamic',
+                                        foreign_keys='Transaction.sender_id')
+    received_transactions = db.relationship('Transaction', backref='receiver', lazy='dynamic',
+                                            foreign_keys='Transaction.receiver_id')
 
     def __repr__(self):
         return f'User:{self.Name} {self.last_name}'
@@ -35,6 +38,7 @@ class Card(db.Model):
 class Transaction(db.Model):
     id = db.Column(db.String(256), index=True, primary_key=True)
     amount = db.Column(db.Float(), nullable=False)
+
     sender_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     receiver_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
 
