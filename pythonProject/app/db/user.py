@@ -2,13 +2,13 @@ from app import database as db
 from app import login_manager
 from flask_login import UserMixin
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-
-class User(db.Model,UserMixin):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), index=True, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
@@ -31,38 +31,3 @@ class User(db.Model,UserMixin):
 
     def __repr__(self):
         return f'User:{self.Name} {self.last_name}'
-
-
-class Card(db.Model):
-    id = db.Column(db.Integer(), index=True, primary_key=True)
-    expiring_date = db.Column(db.DateTime(), nullable=False)
-    card_number = db.Column(db.String(16), unique=True, nullable=False)
-    pin_code_hash = db.Column(db.String(256), nullable=False)
-    user = db.Column(db.Integer(), db.ForeignKey('user.id'))
-    user_name = db.Column(db.String(20), nullable=False)
-
-    def __repr__(self):
-        return f'Card: {self.id} {self.user_name}'
-
-
-class Transaction(db.Model):
-    id = db.Column(db.String(256), index=True, primary_key=True)
-    amount = db.Column(db.Float(), nullable=False)
-
-    sender_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
-    receiver_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
-    datetime = db.Column(db.DateTime(), nullable=False)
-
-    def __repr__(self):
-        return f'Transaction: {self.id}'
-
-
-class Account(db.Model):
-    id = db.Column(db.Integer(), index=True, primary_key=True)
-    owner_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
-    amount = db.Column(db.Float(), nullable=False)
-
-    def __repr(self):
-        return f'Account: {self.id} Amount:{self.amount}'
-
-

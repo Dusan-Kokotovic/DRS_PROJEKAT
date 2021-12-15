@@ -1,7 +1,7 @@
 from app import app, database
 from flask import render_template,flash,redirect,url_for
 from app.forms import RegisterForm,LoginForm
-from app.db.models import User
+from app.db.user import User
 from flask_login import login_user,logout_user
 
 
@@ -9,6 +9,7 @@ from flask_login import login_user,logout_user
 @app.route('/home')
 def home_page():
     return render_template('home.html')
+
 
 @app.route('/register',methods=['GET','POST'])
 def register_page():
