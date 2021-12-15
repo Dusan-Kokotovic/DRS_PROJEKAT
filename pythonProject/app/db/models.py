@@ -1,7 +1,14 @@
 from app import database as db
+from app import login_manager
+from flask_login import UserMixin
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
-class User(db.Model):
+
+class User(db.Model,UserMixin):
     id = db.Column(db.Integer(), index=True, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
@@ -18,6 +25,9 @@ class User(db.Model):
                                         foreign_keys='Transaction.sender_id')
     received_transactions = db.relationship('Transaction', backref='receiver', lazy='dynamic',
                                             foreign_keys='Transaction.receiver_id')
+
+    def check_password_correction(self,attempted_password):
+        return self.password_hash == attempted_password
 
     def __repr__(self):
         return f'User:{self.Name} {self.last_name}'
