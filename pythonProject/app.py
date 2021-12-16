@@ -1,13 +1,5 @@
-from app import app
-from app.db.models import User,Account,Transaction,Card
+from run import main
 
 
-@app.shell_context_processor
-def create_shell_context():
-    return {'User': User, 'Account': Account, 'Transaction': Transaction, 'Card': Card}
-
-
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__=='__main__':
+    main()

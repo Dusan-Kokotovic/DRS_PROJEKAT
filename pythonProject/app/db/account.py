@@ -1,4 +1,4 @@
-from app import database as db
+from . import database as db
 
 
 class Account(db.Model):

@@ -1,4 +1,4 @@
-from app import database as db
+from . import database as db
 
 
 class Card(db.Model):
@@ -11,3 +11,6 @@ class Card(db.Model):
 
     def __repr__(self):
         return f'Card: {self.id} {self.user_name}'
+
+
+

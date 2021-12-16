@@ -7,11 +7,6 @@ from flask import current_app
 
 from alembic import context
 
-from app.db.user import User
-from app.db.card import Card
-from app.db.account import Account
-from app.db.transaction import Transaction
-
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

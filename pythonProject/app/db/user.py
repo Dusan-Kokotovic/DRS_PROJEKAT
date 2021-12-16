@@ -1,11 +1,5 @@
-from app import database as db
-from app import login_manager
+from . import database as db
 from flask_login import UserMixin
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 
 class User(db.Model, UserMixin):
@@ -16,9 +10,9 @@ class User(db.Model, UserMixin):
     address = db.Column(db.String(35), nullable=False)
     city = db.Column(db.String(20), nullable=False)
     country = db.Column(db.String(20), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
     phone = db.Column(db.String(12), nullable=False)
-    card = db.relationship('Card', backref='user_owns')
+    card = db.relationship('Card', backref='user_owns', uselist='False', lazy='dynamic')
     account = db.relationship('Account', backref='user', uselist='False')
 
     sent_transactions = db.relationship('Transaction', backref='sender', lazy='dynamic',
@@ -31,3 +25,5 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f'User:{self.Name} {self.last_name}'
+
+
