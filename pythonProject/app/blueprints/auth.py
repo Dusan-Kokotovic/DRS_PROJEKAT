@@ -1,16 +1,19 @@
-from app import app, database
-from flask import render_template,flash,redirect,url_for,request
-from app.forms import RegisterForm,LoginForm,FilterForm
-from app.db.models import User,Transaction
-from flask_login import login_user,logout_user,current_user
+
+import functools
+from flask import Blueprint,render_template,redirect,url_for,flash,request
+
+from app.forms import RegisterForm, LoginForm,FilterForm
+from flask_login import login_user, logout_user,current_user
+from app.db import database
+from app.db.user import User
+from app.db.transaction import Transaction
 
 
-@app.route('/')
-@app.route('/home')
-def home_page():
-    return render_template('home.html')
+auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@app.route('/register',methods=['GET','POST'])
+
+
+@auth_bp.route('/register_page', methods=['GET', 'POST'])
 def register_page():
     register_form = RegisterForm()
 
@@ -27,15 +30,16 @@ def register_page():
         database.session.add(new_user)
         database.session.commit()
         login_user(new_user)
-        flash(f"Account created successfully!",category='success')
-        return redirect(url_for('home_page'))
+        flash(f"Account created successfully!", category='success')
+        return redirect(url_for('home.index'))
 
     if register_form.errors != {}: # ako ima erora tokom validacije,ako je errors nije {}
         for err_msg in register_form.errors.values():
             flash(f"There was an error with creating a user: {err_msg}",category='danger')
-    return render_template('register.html',register_form=register_form)
+    return render_template('register.html', register_form=register_form)
 
-@app.route('/login',methods=['POST','GET'])
+
+@auth_bp.route('/login_page', methods=['POST', 'GET'])
 def login_page():
     login_form = LoginForm()
 
@@ -44,20 +48,21 @@ def login_page():
         if attempted_user and attempted_user.check_password_correction(attempted_password=login_form.password.data):
             login_user(attempted_user)
             flash(f"You are logged in as {attempted_user.name}",category='success')
-            return redirect(url_for('home_page'))
+            return redirect(url_for('home.index'))
         else:
             flash(f"Email and password are not valid! Please try again!",category='danger')
 
-    return render_template('login.html',login_form=login_form)
+    return render_template('login.html', login_form=login_form)
 
-@app.route('/logout')
+
+@auth_bp.route('/logout_page')
 def logout_page():
     logout_user()
     flash(f"You have been logged out!",category="info")
-    return redirect(url_for('home_page'))
+    return redirect(url_for('home.index'))
 
 
-@app.route('/history',methods=['GET','POST'])
+@auth_bp.route('/history',methods=['GET','POST'])
 def history_page():
     filter_form = FilterForm()
     filter_form1 = FilterForm()
@@ -74,6 +79,7 @@ def history_page():
 
     if request.args.get('type') == 'RA': # Receiver A-Z
         sent_transactions = Transaction.query.filter_by(sender_id=current_user.id).order_by(Transaction.receiver_id)
+        # nema trika da napravim po imenu sortiranje
     if request.args.get('type') == 'RZ': # Receiver Z-A
         sent_transactions = Transaction.query.filter_by(sender_id=current_user.id).order_by(Transaction.receiver_id.desc())
     if request.args.get('type') == 'AG1': # Amount growing
@@ -104,5 +110,5 @@ def history_page():
                            sent_transactions=sent_transactions,users=users,
                            filter_form=filter_form,filter_form1=filter_form1)
 
-
-
+    flash(f"You have been logged out!", category="info")
+    return redirect(url_for('home.index'))
