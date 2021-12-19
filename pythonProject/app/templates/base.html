@@ -25,6 +25,11 @@
          <li class="nav-item">
             <a class="nav-link" href="#">Pricing</a>
          </li>
+
+          </li>
+         <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('history_page') }}">History</a>
+         </li>
          {% endif %}
       </ul>
       {% if current_user.is_authenticated %}

@@ -2,6 +2,9 @@ from app import database as db
 from app import login_manager
 from flask_login import UserMixin
 
+
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -16,7 +19,7 @@ class User(db.Model,UserMixin):
     address = db.Column(db.String(35), nullable=False)
     city = db.Column(db.String(20), nullable=False)
     country = db.Column(db.String(20), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False,unique=True)
     phone = db.Column(db.String(12), nullable=False)
     card = db.relationship('Card', backref='user_owns')
     account = db.relationship('Account', backref='user', uselist='False')
@@ -51,9 +54,11 @@ class Transaction(db.Model):
 
     sender_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     receiver_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    datetime = db.Column(db.DateTime(),nullable=False)
 
     def __repr__(self):
         return f'Transaction: {self.id}'
+
 
 
 class Account(db.Model):
