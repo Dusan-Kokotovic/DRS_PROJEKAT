@@ -21,10 +21,12 @@ class LoginForm(FlaskForm):
     password = PasswordField(label="Password",validators=[DataRequired()])
     submit = SubmitField(label="Login")
 
+
 class FilterForm(FlaskForm):
-    name = StringField(label="Name", validators=[DataRequired()])
-    amountfrom = IntegerField(label="Amount from",validators=[DataRequired()])
-    amountto = IntegerField(label="Amount to",validators=[DataRequired()])
-    datetimefrom = DateTimeField(label="Time from",validators=[DataRequired()])
-    datetimeto = DateTimeField(label="Time to",validators=[DataRequired()])
-    submit = SubmitField(label="Filter",validators=[DataRequired()])
+    name = StringField(label="Name")
+    amount_from = IntegerField(label="Amount from")
+    amount_to = IntegerField(label="Amount to")
+    datetime_from = DateTimeField(label="Time from")
+    datetime_to = DateTimeField(label="Time to")
+    submit = SubmitField(label="Filter")
+

@@ -7,9 +7,9 @@ Transaction history
 
 {% block content %}
 {% if current_user.is_authenticated %}
-    <div class="row">
+    <div class="row center-block">
         <div class="col-6">
-         <h3 class="text-center"> History of sent transactions </h3>
+         <h3 class="text-center"> Transaction history </h3>
             <br>
 
      <div style="margin-bottom:5px; margin-left:30px" class="card text-center bg-light">
@@ -18,27 +18,27 @@ Transaction history
                   <br>
 
                       <form method="post">
-                              {{ filter_form1.hidden_tag() }}
+                              {{ filter_form.hidden_tag() }}
 
-                               {{ filter_form1.name.label() }}
-                           {{ filter_form1.name(placeholder="Receiver") }}
+                               {{ filter_form.name.label() }}
+                           {{ filter_form.name(placeholder="Receiver") }}
 
-                            {{filter_form1.amountfrom.label() }}
-                         {{ filter_form1.amountfrom(placeholder="From") }}
+                            {{filter_form.amount_from.label() }}
+                         {{ filter_form.amount_from(placeholder="From") }}
 
-                             {{ filter_form1.amountto.label() }}
-                        {{ filter_form1.amountto(placeholder="To") }}
+                             {{ filter_form.amount_to.label() }}
+                        {{ filter_form.amount_to(placeholder="To") }}
                             <br>
                     <br>
-                        {{ filter_form1.datetimefrom.label() }}
-                        {{ filter_form1.datetimefrom(placeholder="From") }}
+                        {{ filter_form.datetime_from.label() }}
+                        {{ filter_form.datetime_from(placeholder="From") }}
 
-                        {{ filter_form1.datetimeto.label() }}
-                        {{ filter_form1.datetimeto(placeholder="To") }}
+                        {{ filter_form.datetime_to.label() }}
+                        {{ filter_form.datetime_to(placeholder="To") }}
 
                      <br>
                     <br>
-                         {{ filter_form1.submit(class="btn btn-lg btn-secondary") }}
+                         {{ filter_form.submit(class="btn btn-lg btn-secondary") }}
                      </form>
                   <p class="card-text">
 
@@ -48,46 +48,7 @@ Transaction history
 
 
         </div>
-        <div class="col-6">
-            <h3 class="text-center">History of received transactions</h3>
-            <br>
 
-
-
-     <div style="margin-bottom:5px; margin-right:20px; margin-left:20px" class="card text-center bg-light">
-               <div class="card-body">
-                  <h5 class="card-title">Filters</h5>
-                  <br>
-                <form method="post">
-                              {{ filter_form.hidden_tag() }}
-
-                               {{ filter_form.name.label() }}
-                           {{ filter_form.name(placeholder="Sender") }}
-
-                            {{filter_form.amountfrom.label() }}
-                         {{ filter_form.amountfrom(placeholder="From") }}
-
-                             {{ filter_form.amountto.label() }}
-                        {{ filter_form.amountto(placeholder="To") }}
-                            <br>
-                    <br>
-                        {{ filter_form.datetimefrom.label() }}
-                        {{ filter_form.datetimefrom(placeholder="From") }}
-
-                        {{ filter_form.datetimeto.label() }}
-                        {{ filter_form.datetimeto(placeholder="To") }}
-
-                     <br>
-                    <br>
-                         {{ filter_form.submit(class="btn btn-lg btn-secondary") }}
-                </form>
-                  <p class="card-text">
-                      </p>
-               </div>
-
-
-        </div>
-    </div>
     <div class="row" style="margin-top:20px; margin-left:20px; margin-right:20px">
         <div class="col-6">
 
@@ -97,12 +58,12 @@ Transaction history
                     </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
-                <li><a class="dropdown-item" href="history?type=RA">Receiver A-Z</a></li>
-                 <li><a class="dropdown-item" href="history?type=RZ">Receiver Z-A</a></li>
-                <li><a class="dropdown-item" href="history?type=AG1">Amount growing</a></li>
-                <li><a class="dropdown-item" href="history?type=AD1">Amount descending</a></li>
-                <li><a class="dropdown-item" href="history?type=TG1">Time growing</a></li>
-                <li><a class="dropdown-item" href="history?type=TD1">Time descending</a></li>
+                <li><a class="dropdown-item">Receiver A-Z</a></li>
+                 <li><a class="dropdown-item">Receiver Z-A</a></li>
+                <li><a class="dropdown-item">Amount growing</a></li>
+                <li><a class="dropdown-item">Amount descending</a></li>
+                <li><a class="dropdown-item">Time growing</a></li>
+                <li><a class="dropdown-item">Time descending</a></li>
              </ul>
             </div>
             <br>
@@ -110,48 +71,6 @@ Transaction history
                 <thead>
                     <tr>
                         <th scope="col">Receiver</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    <!--ovde ce ici for za sve transakcije u okviru korisnika-->
-                    {% for transaction in sent_transactions %}
-                    <tr>
-                          {% for user in users  %}
-                        {% if user.id == transaction.receiver_id %}
-                        <td>{{ user.name }}</td>
-                        {% endif %}
-                        {% endfor %}
-                        <td>{{ transaction.amount }}</td>
-                        <td>{{ transaction.datetime }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-6">
-
-
-            <div class="dropdown" >
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                     Sort by
-                    </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                 <li><a class="dropdown-item" href="history?type=SA">Sender A-Z</a></li>
-                 <li><a class="dropdown-item" href="history?type=SZ">Sender Z-A</a></li>
-                <li><a class="dropdown-item" href="history?type=AG2">Amount growing</a></li>
-                <li><a class="dropdown-item" href="history?type=AD2">Amount descending</a></li>
-                <li><a class="dropdown-item" href="history?type=TG2">Time growing</a></li>
-                <li><a class="dropdown-item" href="history?type=TD2">Time descending</a></li>
-             </ul>
-            </div>
-            <br>
-            <table class="table table-hover table-bordered">
-                <thead>
-                    <tr>
                         <th scope="col">Sender</th>
                         <th scope="col">Amount</th>
                         <th scope="col">Time</th>
@@ -159,25 +78,17 @@ Transaction history
                 </thead>
                 <tbody>
 
-                    <!--ovde ce ici for za sve transakcije u okviru korisnika-->
-                        {% for transaction in received_transactions %}
+                    {% for transaction in transactions %}
                     <tr>
-                        {% for user in users  %}
-                        {% if user.id == transaction.sender_id %}
-                        <td>{{ user.name }}</td>
-                        {% endif %}
-                        {% endfor %}
-                        <td> {{ transaction.amount }}  </td>
+                        <td>{{ transaction.sender.name }}</td>
+                        <td>{{ transaction.receiver.name }}</td>
+                        <td>{{ transaction.amount }}</td>
                         <td>{{ transaction.datetime }}</td>
                     </tr>
-
                 {% endfor %}
                 </tbody>
             </table>
-
         </div>
-
-
     </div>
 
 

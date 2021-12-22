@@ -24,6 +24,6 @@ class User(db.Model, UserMixin):
         return self.password_hash == attempted_password
 
     def __repr__(self):
-        return f'User:{self.Name} {self.last_name}'
+        return f'User:{self.name} {self.last_name}'
 
 
