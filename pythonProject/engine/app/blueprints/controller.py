@@ -138,14 +138,15 @@ def sent():
         return 404
 
     if request.method == 'POST':
-        name = req_json.get('data')['name']
-        amount_to = req_json.get('data')['amount_to']
-        amount_from = req_json.get('data')['amount_from']
-        date_to = req_json.get('data')['date_to']
-        date_from = req_json.get('data')['date_from']
+        name = req_json['name']
+        amount_to = req_json['amountTo']
+        amount_from = req_json['amountFrom']
+        date_to = req_json['dateTo']
+        date_from = req_json['dateFrom']
 
         transactions = repo.filter_sent_transactions(user_id, name, amount_to, amount_from, date_from, date_to)
-        return jsonify({'transactions': transactions}), 200
+        retval = TransactionQueryMapper.map_transaction_user_array(transactions,False)
+        return jsonify({'data': retval}), 200
     elif request.method == 'GET':
         transactions = repo.get_sent_transactions(user_id)
         retval = TransactionQueryMapper.map_transaction_user_array(transactions, False)
@@ -178,6 +179,7 @@ def received():
         amount_from = req_json['amountFrom']
         date_to = req_json['dateTo']
         date_from = req_json['dateFrom']
+
         transactions = repo.filter_received_transactions(user_id, name, amount_to, amount_from, date_from, date_to)
         print(transactions)
         retval = TransactionQueryMapper.map_transaction_user_array(transactions, True)

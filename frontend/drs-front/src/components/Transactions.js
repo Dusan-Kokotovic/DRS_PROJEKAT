@@ -24,7 +24,8 @@ const FilterForm = ({ isSentTransactions, fetchData }) => {
       data.amountFrom,
       data.amountTo,
       data.dateFrom,
-      data.dateTo
+      data.dateTo,
+      isSentTransactions
     );
   };
 
