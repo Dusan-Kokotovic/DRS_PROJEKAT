@@ -7,14 +7,7 @@ from ..account import Account
 from .. import database
 
 
-class UserAccess(object):
-
-    def get_by_email(self, email: str) -> User:
-        return User.query.filter_by(email=email).first()
-
-    def get_by_id(self, id: int) -> User:
-        return User.query.filter_by(id=id).first()
-
+class TransactionAccess(object):
     def get_sent_transactions(self, id: int):
         return Transaction.query.filter_by(sender_id=id).all()
 
@@ -58,6 +51,15 @@ class UserAccess(object):
     def filter_received_transactions(self, user_id, name, amount_to, amount_from, time_from, time_to):
         query = Transaction.query.filter_by(receiver_id=user_id)
         return self.__filter_transactions(name, amount_to, amount_from, time_from, time_to, query, 'receiver')
+
+
+class UserAccess(object):
+
+    def get_by_email(self, email: str) -> User:
+        return User.query.filter_by(email=email).first()
+
+    def get_by_id(self, id: int) -> User:
+        return User.query.filter_by(id=id).first()
 
     def save_user(self, user: User):
 

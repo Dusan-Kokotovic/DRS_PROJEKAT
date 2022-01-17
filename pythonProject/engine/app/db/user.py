@@ -34,6 +34,8 @@ class User(db.Model, UserMixin):
     received_transactions = db.relationship('Transaction', backref='receiver', lazy='dynamic',
                                             foreign_keys='Transaction.receiver_id')
 
+    coins = db.relationship('CoinUserAssociation', backref='owner', lazy='dynamic')
+
     def check_password_correction(self, attempted_password):
         return check_password_hash(self.password_hash, attempted_password)
 

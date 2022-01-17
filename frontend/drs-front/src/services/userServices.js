@@ -79,6 +79,7 @@ export const fetchSentTransactions = async () => {
 export const fetchReceivedTransactions = async () => {
   let token = localStorage.getItem("user");
   if (token === null || token === "") return;
+
   let auth = authHeader();
   let reqOptions = {
     method: "get",

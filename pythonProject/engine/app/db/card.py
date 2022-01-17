@@ -8,6 +8,7 @@ class Card(db.Model):
     pin_code_hash = db.Column(db.String(256), nullable=False)
     user = db.Column(db.Integer(), db.ForeignKey('user.id'))
     user_name = db.Column(db.String(20), nullable=False)
+    amount = db.Column(db.Float(), nullable=False)
 
     def __repr__(self):
         return f'Card: {self.id} {self.user_name}'
