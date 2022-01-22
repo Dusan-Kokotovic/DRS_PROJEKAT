@@ -71,6 +71,23 @@ class UserAccess(object):
 
         return True
 
+    def edit_user(self, user: User):
+        database.session.query(User).filter_by(id=user.id).update(
+            {
+            "name": user.name,
+            "last_name": user.last_name,
+            "password": user.password,
+            "address": user.address,
+            "city": user.city,
+            "country": user.country,
+            "email": user.email,
+            "phone": user.phone
+            },
+            synchronize_session = "fetch")
+        database.session.commit()
+
+        return True
+
     def delete_user(self, user: User):
 
         if database.session.query(User).filter_by(email=user.email).count() > 0:

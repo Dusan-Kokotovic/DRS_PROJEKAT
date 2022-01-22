@@ -1,6 +1,7 @@
 import {
   login,
   register,
+  edit,
   getUserInfo,
   getSentTransactions,
   getReceivedTransactions,
@@ -180,6 +181,50 @@ export const userRegister = async (
   };
 
   return await fetch(register, reqOptions)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json);
+    })
+    .catch((error) => {
+      let { msg } = error.json();
+      console.log(msg);
+    });
+};
+
+export const userEdit = async (
+  email,
+  password,
+  name,
+  last_name,
+  address,
+  city,
+  country,
+  phone
+) => {
+  let token = localStorage.getItem("user");
+
+  if (token != null && token != "") return;
+
+  let data = {
+    email: email,
+    password: password,
+    name: name,
+    lastName: last_name,
+    address: address,
+    city: city,
+    country: country,
+    phone: phone,
+  };
+
+  let reqOptions = {
+    method: "post",
+    body: JSON.stringify(data),
+    headers: { "content-type": "application/json" },
+  };
+
+  return await fetch(edit, reqOptions)
     .then((response) => {
       return response.json();
     })

@@ -4,12 +4,15 @@ import {
   SET_MESSAGE,
   REGISTER_FAIL,
   REGISTER_SUCCESS,
+  EDIT_FAIL,
+  EDIT_SUCCESS
 } from "../types";
 
 import {
   userLogin,
   userLogout,
   userRegister,
+  userEdit
 } from "../../services/userServices";
 
 export const login = (email, password) => (dispatch) => {
@@ -55,6 +58,36 @@ export const registerAction = (
     })
     .catch((error) => {
       dispatch({ type: REGISTER_FAIL });
+      return Promise.reject();
+    });
+};
+
+export const editAction = (
+  email,
+  password,
+  name,
+  lastName,
+  address,
+  city,
+  country,
+  phone
+) => (dispatch) => {
+  return userEdit(
+    email,
+    password,
+    name,
+    lastName,
+    address,
+    city,
+    country,
+    phone
+  )
+    .then((success) => {
+      dispatch({ type: EDIT_SUCCESS });
+      return Promise.resolve();
+    })
+    .catch((error) => {
+      dispatch({ type: EDIT_FAIL });
       return Promise.reject();
     });
 };

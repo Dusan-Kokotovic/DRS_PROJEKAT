@@ -3,6 +3,8 @@ import {
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  EDIT_FAIL,
+  EDIT_SUCCESS
 } from "../types";
 
 const user = localStorage.getItem("user");
@@ -21,6 +23,10 @@ export default function(state = initialState, action) {
       return { isLoggedIn: false };
     case REGISTER_SUCCESS:
       return { isLoggedIn: false };
+    case EDIT_FAIL:
+      return { isLoggedIn: true };
+    case EDIT_SUCCESS:
+      return { isLoggedIn: true };
 
     default:
       return state;
