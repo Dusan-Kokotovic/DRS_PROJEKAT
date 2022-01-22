@@ -10,7 +10,7 @@ const user = localStorage.getItem("user");
 const initialState = user ? { isLoggedIn: true } : { isLoggedIn: false };
 
 export default function(state = initialState, action) {
-  const { type } = action;
+  const { type, data } = action;
 
   switch (type) {
     case LOGIN_SUCCESS:

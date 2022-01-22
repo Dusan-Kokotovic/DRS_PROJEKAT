@@ -5,6 +5,7 @@ from engine.db.access.user_access import UserAccess, User, Card
 from engine.app.config import Config
 from email_validator import validate_email
 from .helpers import check_logged_in
+from flask import make_response
 
 
 user_controller = Blueprint('user_controller', __name__, url_prefix='/api/user')
@@ -104,13 +105,12 @@ def login():
     user = repo.get_by_email(email)
 
     if user is None:
-        return jsonify({"msg": "User doesn't exist"}), 404
+        return jsonify({"msg": "User doesn't exist"}), 400
 
     if not user.check_password_correction(password):
-        return jsonify({"msg": "Bad password"}), 401
+        return 401
 
     token = user.encode_jwt(Config.SECRET_KEY)
-
 
     return jsonify({"token": token}), 200
 
@@ -168,6 +168,6 @@ def register():
     repo.save_user(new_user)
     repo.add_account(new_user.id)
 
-    return jsonify({"msg": "Success"}), 200
+    return 200
 
 
