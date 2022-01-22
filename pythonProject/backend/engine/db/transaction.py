@@ -17,7 +17,7 @@ class Transaction(db.Model):
         self.datetime = date
         self.transaction_state = transaction_state.name
 
-    base_id = db.Column(db.Integer(), index=True, primary_key=True,)
+    base_id = db.Column(db.Integer(), index=True, primary_key=True)
     id = db.Column(db.String(256), index=True, nullable=True)
     amount = db.Column(db.Float(), nullable=False)
     sender_id = db.Column(db.Integer(), db.ForeignKey('user.id'))

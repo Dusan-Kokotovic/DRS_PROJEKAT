@@ -20,13 +20,13 @@ def create_app():
     database.init_app(app)
     executorQueue.init_app(app)
     Migrate(app, database)
-
+    from ..db.user import User
     from ..db.coin import Coin
     from ..db.transaction import Transaction
     from ..db.coin_user_association import CoinUserAssociation
     from ..db.account import Account
     return app
 
-application = create_app()
-bp.executor = Executor(application)
+app = create_app()
+bp.executor = Executor(app)
 

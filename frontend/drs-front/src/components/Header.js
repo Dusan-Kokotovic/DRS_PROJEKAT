@@ -46,6 +46,16 @@ const Header = () => {
                   Send Transaction
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/withdraw">
+                  Withdraw
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/exchange">
+                  Exchange
+                </Link>
+              </li>
             </React.Fragment>
           ) : (
             <React.Fragment>

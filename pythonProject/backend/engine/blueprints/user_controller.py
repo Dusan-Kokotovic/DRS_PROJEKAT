@@ -170,4 +170,23 @@ def register():
 
     return jsonify({"msg": "Success"}), 200
 
+@user_controller.route('/withdraw', methods=['POST'])
+def withdraw():
+    user = check_logged_in(repo)
 
+    if user is False:
+        return jsonify({"msg": "Unauthorized"}), 401
+
+    if not request.json:
+        return jsonify({"msg": "Bad request"}), 400
+
+    data = request.get_json()
+
+    try:
+        amount = data['amount']
+
+    except KeyError:
+        return jsonify({"msg": "Bad request"}), 400
+
+    repo.add_money(user.id ,float(amount))
+    return  200
