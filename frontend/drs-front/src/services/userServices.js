@@ -195,27 +195,28 @@ export const userRegister = async (
 
 export const userEdit = async (
   email,
-  password,
   name,
   last_name,
   address,
   city,
   country,
-  phone
+  phone,
+  password
 ) => {
-  let token = localStorage.getItem("user");
 
-  if (token != null && token != "") return;
+  // ovo iskreno nisam skontao kako radi, ali u sustini morao sam da zakomentarisem da bi stigao do bekenda
+  // let token = localStorage.getItem("user");
+  // if (token != null && token != "") return;
 
   let data = {
     email: email,
-    password: password,
     name: name,
     lastName: last_name,
     address: address,
     city: city,
     country: country,
     phone: phone,
+    password: password
   };
 
   let reqOptions = {

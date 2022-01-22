@@ -64,23 +64,23 @@ export const registerAction = (
 
 export const editAction = (
   email,
-  password,
   name,
   lastName,
   address,
   city,
   country,
-  phone
+  phone,
+  password
 ) => (dispatch) => {
   return userEdit(
     email,
-    password,
     name,
     lastName,
     address,
     city,
     country,
-    phone
+    phone,
+    password
   )
     .then((success) => {
       dispatch({ type: EDIT_SUCCESS });

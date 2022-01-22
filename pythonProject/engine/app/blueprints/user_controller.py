@@ -123,20 +123,14 @@ def edit():
     data = request.get_json()
     try:
         email = data['email']
-        password = data['password']
         address = data['address']
         city = data['city']
         country = data['country']
         phone = data['phone']
         name = data['name']
         last_name = data['lastName']
+        password = data['password']
     except KeyError:
-        return jsonify({"msg": "Bad request"}), 400
-
-    if email is None or email == '' or not validate_email(email):
-        return jsonify({"msg": "Bad request"}), 400
-
-    if password is None or password == '' or len(password) < 6:
         return jsonify({"msg": "Bad request"}), 400
 
     if address is None or address == '':
@@ -157,13 +151,10 @@ def edit():
     if last_name is None or last_name == '':
         return jsonify({"msg": "Bad request"}), 400
 
-    does_exist = repo.get_by_email(email)
-
-    if does_exist is not None:
-        return jsonify({"msg": "Email is already taken"}), 409
-
+    #on odmah u konstruktoru hesira 
     new_user = User(name, last_name, password, address, city, country, email, phone)
 
+    #pa ovde ni nema polje "password" nego vec automatski je "password_hash"
     repo.edit_user(new_user)
 
     return jsonify({"msg": "Success"}), 200

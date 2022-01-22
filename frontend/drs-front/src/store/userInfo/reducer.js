@@ -21,7 +21,7 @@ export default function(state = initialState, action) {
       return {
         name: payload.name,
         lastName: payload.lastName,
-        address: payload.lastName,
+        address: payload.address,
         country: payload.country,
         phone: payload.phone,
         city: payload.city,
