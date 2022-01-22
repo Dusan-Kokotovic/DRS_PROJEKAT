@@ -1,8 +1,8 @@
-from engine.app import application
+from engine.app import app
 
 
 def main():
-    application.run()
+    app.run()
 
 
 if __name__ == "__main__":

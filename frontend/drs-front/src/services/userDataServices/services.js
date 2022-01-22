@@ -2,8 +2,72 @@ import {
   getUserInfoPath,
   userVerificationPath,
   getUserCoinsDataPath,
+  withdrawMoneyPath,
+  ExchangeMoneyPath
 } from "./urls";
 import { authHeader } from "../auth-header";
+
+
+export const exchangeMoney = async (amount) =>{
+  let token = localStorage.getItem("user");
+
+  if(token === null || token === "")return;
+
+  let data = {
+    amount : amount
+  }
+
+  let reqOptions = {
+    method : "post",
+    body : JSON.stringify(data),
+    headers: {
+      "content-type": "application/json",
+      Authorization: token,
+    }
+  }
+
+  return fetch(ExchangeMoneyPath, reqOptions)
+  .then((response) => {
+    return response.json();
+  })
+  .then((json) => {
+    return json;
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
+export const withdrawMoney = async (amount) =>{
+  let token = localStorage.getItem("user");
+
+  if(token === null || token === "") return;
+
+  let data = {
+    amount : amount
+  };
+
+  let reqOptions = {
+    method : "post",
+    body : JSON.stringify(data),
+    headers: {
+      "content-type": "application/json",
+      Authorization: token,
+    },
+  }
+
+  return fetch(withdrawMoneyPath, reqOptions)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      return json;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
 
 export const getUserCoinsData = async () => {
   let token = localStorage.getItem("user");

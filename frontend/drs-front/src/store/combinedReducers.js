@@ -4,6 +4,7 @@ import message from "./message/reducer";
 import userInfo from "./userInfo/reducer";
 import transactionsData from "./transactionsData/reducer";
 import userCoinData from "./userCoinData/reducer";
+import coinMarket from "./coinMarket/reducer";
 
 export default combineReducers({
   auth,
@@ -11,4 +12,5 @@ export default combineReducers({
   userInfo,
   transactionsData,
   userCoinData,
+  coinMarket
 });

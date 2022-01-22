@@ -3,11 +3,17 @@ import {
   GET_CURRENT_USER_INFO_FAIL,
   VERIFICATION_FAIL,
   VERIFICATION_SUCCESS,
+  WITHDRAW,
+  WITHDRAW_ERROR,
+  EXCHANGE,
+  EXCHANGE_ERROR
 } from "../types";
 
 import {
   _getCurrentUserInfo,
   verifyUser,
+  withdrawMoney, 
+  exchangeMoney
 } from "../../services/userDataServices/services";
 
 export const getCurrentUserInfo = () => (dispatch) => {
@@ -40,3 +46,37 @@ export const submitCardData = (cardNumber, expirationDate, pinCode) => (
     }
   );
 };
+
+export const WithdrawAmount = (amount) => (
+  dispatch
+) => {
+  return withdrawMoney (amount).then(
+    (response) => {
+      dispatch({type: WITHDRAW});
+      return Promise.resolve();
+      
+    },
+    (error) => {
+      dispatch({type : WITHDRAW_ERROR});
+      console.log(error);
+      return Promise.reject();
+    }
+  )
+}
+
+export const ExchangeAmount = (amount) =>(
+  dispatch
+) => {
+  return exchangeMoney (amount).then(
+    (response) => {
+      dispatch({type: EXCHANGE});
+      return Promise.resolve();
+    },
+    (error) => {
+      dispatch({type : EXCHANGE_ERROR});
+      console.log(error);
+      return Promise.reject();
+    }
+  )
+
+}

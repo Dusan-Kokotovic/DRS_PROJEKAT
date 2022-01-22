@@ -166,6 +166,12 @@ class UserAccess(object):
             database.session.remove(card)
             database.session.commit()
 
+    def add_money(self,user_id : int,amount : float):
+        acc = Account.query.filter_by(owner_id=user_id).first()
+        if acc is not None:
+            acc.amount +=amount
+            database.session.commit()
+
 
 
 
