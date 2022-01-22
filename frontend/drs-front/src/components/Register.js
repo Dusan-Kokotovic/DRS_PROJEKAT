@@ -3,14 +3,27 @@ import { ReactReduxContext, useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Form, Button } from "semantic-ui-react";
 import Header from "./Header";
-import { validateEmail } from "../helpers/validation";
+import {
+  validateEmail,
+  validateNumber,
+  validateLetters,
+} from "../helpers/validation";
 
 import { registerAction } from "../store/auth/actions";
 
 const Register = ({ history }) => {
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  if (isLoggedIn) {
+    history.push("/");
+    window.location.reload();
+  }
+
   const dispatch = useDispatch();
   const [emailError, setEmailError] = useState("");
-
+  const [numberError, setNumberError] = useState("");
+  const [cityError, setCityError] = useState("");
+  const [countryError, setCountryError] = useState("");
+  let isError = false;
   const {
     register,
     handleSubmit,
@@ -21,9 +34,37 @@ const Register = ({ history }) => {
     console.log(data);
     if (!validateEmail(data.email)) {
       setEmailError("Email is not valid");
-      return;
+      //return;
+      isError = true;
     } else {
       setEmailError("");
+    }
+
+    if (!validateLetters(data.city)) {
+      setCityError("City is not valid");
+      //return;
+      isError = true;
+    } else {
+      setCityError("");
+    }
+
+    if (!validateLetters(data.country)) {
+      setCountryError("Country is not valid");
+      //return;
+      isError = true;
+    } else {
+      setCountryError("");
+    }
+
+    if (!validateNumber(data.phone)) {
+      setNumberError("Number is not valid");
+      //return;
+      isError = true;
+    } else {
+      setNumberError("");
+    }
+    if (isError) {
+      return;
     }
 
     dispatch(
@@ -136,6 +177,7 @@ const Register = ({ history }) => {
                 Please enter your city
               </p>
             )}
+            {cityError && <p style={{ color: "red" }}>{cityError}</p>}
           </Form.Field>
           <Form.Field className="m-3 p-1">
             <input
@@ -148,6 +190,7 @@ const Register = ({ history }) => {
                 Please enter your country
               </p>
             )}
+            {countryError && <p style={{ color: "red" }}>{countryError}</p>}
           </Form.Field>
           <Form.Field className="m-3 p-1">
             <input
@@ -160,6 +203,7 @@ const Register = ({ history }) => {
                 Please enter your mobile phone
               </p>
             )}
+            {numberError && <p style={{ color: "red" }}>{numberError}</p>}
           </Form.Field>
           <Button type="submit" className="btn btn-primary m-3   p-1">
             Register

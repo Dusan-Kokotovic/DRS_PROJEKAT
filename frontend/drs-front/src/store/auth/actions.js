@@ -10,7 +10,7 @@ import {
   userLogin,
   userLogout,
   userRegister,
-} from "../../services/userServices";
+} from "../../services/authServices/services";
 
 export const login = (email, password) => (dispatch) => {
   return userLogin(email, password).then(

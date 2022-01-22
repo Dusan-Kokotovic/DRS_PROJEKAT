@@ -5,13 +5,28 @@ import {
   RECVD_TRANSACTIONS_DATA_FETCH_SUCCESS,
   FILTER_TRANSACTIONS_FAIL,
   FILTER_TRANSACTIONS_SUCCESS,
+  SEND_TRANSACTION_SUCCESS,
+  SEND_TRANSACTION_FAIL,
 } from "../types";
 
 import {
   fetchSentTransactions,
   fetchReceivedTransactions,
   filterTransactions,
-} from "../../services/userServices";
+  sendTransaction,
+} from "../../services/transactionsDataServices/services";
+
+export const send = (receiver, amount, coin) => (dispatch) => {
+  return sendTransaction(receiver, coin, amount)
+    .then((response) => {
+      dispatch({ type: SEND_TRANSACTION_SUCCESS });
+      return Promise.resolve();
+    })
+    .catch((error) => {
+      dispatch({ type: SEND_TRANSACTION_FAIL });
+      return Promise.reject();
+    });
+};
 
 export const filter = (
   name,
@@ -66,7 +81,6 @@ export const getReceivedTransactions = () => (dispatch) => {
       return Promise.resolve();
     },
     (error) => {
-      const message = error.msg;
       dispatch({ type: RECVD_TRANSACTIONS_DATA_FETCH_FAIL });
       return Promise.reject();
     }

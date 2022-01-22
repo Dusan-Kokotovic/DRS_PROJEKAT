@@ -16,11 +16,15 @@ const required = (value) => {
 };
 
 const Login = ({ history }) => {
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  if (isLoggedIn) {
+    history.push("/");
+    window.location.reload();
+  }
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
-  const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();

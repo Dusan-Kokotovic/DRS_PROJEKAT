@@ -1,9 +1,14 @@
 import {
   GET_CURRENT_USER_INFO_SUCCESS,
   GET_CURRENT_USER_INFO_FAIL,
+  VERIFICATION_FAIL,
+  VERIFICATION_SUCCESS,
 } from "../types";
 
-import { _getCurrentUserInfo } from "../../services/userServices";
+import {
+  _getCurrentUserInfo,
+  verifyUser,
+} from "../../services/userDataServices/services";
 
 export const getCurrentUserInfo = () => (dispatch) => {
   return _getCurrentUserInfo()
@@ -18,4 +23,20 @@ export const getCurrentUserInfo = () => (dispatch) => {
 
       return Promise.reject();
     });
+};
+
+export const submitCardData = (cardNumber, expirationDate, pinCode) => (
+  dispatch
+) => {
+  return verifyUser(cardNumber, expirationDate, pinCode).then(
+    (response) => {
+      dispatch({ type: VERIFICATION_SUCCESS, payload: response });
+      return Promise.resolve();
+    },
+    (error) => {
+      dispatch({ type: VERIFICATION_FAIL });
+      console.log(error);
+      return Promise.reject();
+    }
+  );
 };

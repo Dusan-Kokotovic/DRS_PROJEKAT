@@ -15,3 +15,12 @@ export const validatePassword = (password) => {
 export const required = (value) => {
   return value !== null && value !== "";
 };
+
+export const validateNumber = (number) => {
+  const re = /^[0-9\b]+$/;
+  return re.test(number);
+};
+export const validateLetters = (text) => {
+  const re = /^[A-Za-z]+$|\s/;
+  return re.test(text);
+};

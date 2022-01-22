@@ -9,6 +9,7 @@ import {
   getReceivedTransactions,
   filter,
 } from "../store/transactionsData/actions";
+import { validateNumber } from "../helpers/validation";
 
 const FilterForm = ({ isSentTransactions, fetchData }) => {
   const {
@@ -18,7 +19,6 @@ const FilterForm = ({ isSentTransactions, fetchData }) => {
   } = useForm();
 
   const onFilter = (data) => {
-    console.log({ data });
     fetchData(
       data.name,
       data.amountFrom,
@@ -84,7 +84,12 @@ const FilterForm = ({ isSentTransactions, fetchData }) => {
   );
 };
 
-const Transactions = ({ isSentTransactions }) => {
+const Transactions = ({ isSentTransactions, history }) => {
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  if (!isLoggedIn) {
+    history.push("/");
+    window.location.reload();
+  }
   const transactions = useSelector((state) => state.transactionsData);
   const [isLoading, setLoading] = useState(false);
   const [filterSeen, setFilterSeen] = useState(false);
@@ -158,6 +163,7 @@ const Transactions = ({ isSentTransactions }) => {
                 <th scope="col">Email</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Timestamp</th>
+                <th scope="col">State</th>
               </tr>
             </thead>
             <tbody>
@@ -169,6 +175,7 @@ const Transactions = ({ isSentTransactions }) => {
                     <td>{transaction.email}</td>
                     <td>{transaction.amount}</td>
                     <td>{transaction.timestamp}</td>
+                    <td>{transaction.state}</td>
                   </tr>
                 );
               })}

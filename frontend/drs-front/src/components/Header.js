@@ -36,6 +36,16 @@ const Header = () => {
                   Received Transactions
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/account">
+                  Account
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/send">
+                  Send Transaction
+                </Link>
+              </li>
             </React.Fragment>
           ) : (
             <React.Fragment>
