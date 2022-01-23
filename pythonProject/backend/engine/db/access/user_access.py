@@ -104,7 +104,6 @@ class TransactionAccess(object):
 
 
 class CoinAccess(object):
-
     def get_user_coins(self, user_id):
         user = User.query.filter_by(id=user_id).first()
 
@@ -113,22 +112,66 @@ class CoinAccess(object):
 
         return user.coins
 
-    def get_coin_by_externId(self,coinId):
-        coin = Coin.query.filter_by(id=coinId).first()
-
+    def get_coin_by_externId(self, coinId):
+        coin = Coin.query.filter_by(extern_api_id=coinId).first()
         return coin
-    def add_coin(self,coin):
-        if coin is None:
-            return
-        database.session.add(coin)
-        database.session.commit()
-        return
-    def add_association(self,):
 
-        return
+    def add_coin(self, coin):
+        if coin is not None:
+            database.session.add(coin)
+            database.session.commit()
+
+    def add_association(self, assoc: CoinUserAssociation):
+        if assoc is not None:
+            database.session.add(assoc)
+            database.session.commit()
+
+    def get_user_coin_assoc(self,coin_id, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        if user is not None:
+            return user.coins.filter_by(coin_id=coin_id).first()
+
+        return None
+
+    def handle_coin_payment(self, user_id, amount, coin_extern_id, price):
+        user = User.query.filter_by(id=user_id).first()
+        account = user.account.first()
+        dbCoin = self.get_coin_by_externId(coin_extern_id)
+
+        if dbCoin is None:
+            self.add_coin(Coin(coin_extern_id))
+            dbCoin = self.get_coin_by_externId(coin_extern_id)
+
+        assoc = self.get_user_coin_assoc(dbCoin.id,user_id)
+
+        if assoc is None:
+            self.add_association(CoinUserAssociation(user_id,dbCoin.id,amount/price))
+        else:
+            assoc.amount += amount
+
+        account.amount -= amount
+        database.session.commit()
 
 
 class UserAccess(object):
+
+    def edit_user(self, user: User):
+        #
+        database.session.query(User).filter_by(email=user.email).update(
+            {
+            "name": user.name,
+            "last_name": user.last_name,
+            "password_hash": user.password_hash,
+            "address": user.address,
+            "city": user.city,
+            "country": user.country,
+            "phone": user.phone
+            },
+            synchronize_session = "fetch")
+        database.session.commit()
+
+        return True
+
 
     def get_by_email(self, email: str) -> User:
         return User.query.filter_by(email=email).first()

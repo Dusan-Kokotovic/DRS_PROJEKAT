@@ -3,7 +3,7 @@ from . import database as db
 
 class CoinUserAssociation(db.Model):
 
-    def __init__(self, owner_id,coin_id,amount):
+    def __init__(self, owner_id, coin_id, amount):
         self.owner_id = owner_id
         self.coin_id = coin_id
         self.amount = amount

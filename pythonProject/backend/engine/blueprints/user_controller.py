@@ -1,8 +1,7 @@
 import datetime
 
 from flask import Blueprint, request, jsonify
-from engine.db.access.user_access import UserAccess, User, Card, Coin
-from engine.db.acces.coin_user_association import CoinUserAssociation
+from engine.db.access.user_access import UserAccess, User, Card, Coin, CoinUserAssociation, CoinAccess
 from engine.app.config import Config
 from email_validator import validate_email
 from .helpers import check_logged_in
@@ -10,6 +9,7 @@ from .helpers import check_logged_in
 
 user_controller = Blueprint('user_controller', __name__, url_prefix='/api/user')
 repo = UserAccess()
+coin_repo = CoinAccess()
 
 def get_user_data(user: User):
     is_verified = True if repo.get_card(user.id) is not None else False
@@ -204,21 +204,66 @@ def exchange():
         return jsonify({"msg": "Bad request"}), 400
 
     data = request.get_json()
+    print(data)
 
     try:
         amount = data['amount']
         coin = data['coin']
-
+        price = data['price']
     except KeyError:
         return jsonify({"msg": "Bad request"}), 400
 
-    print(amount)
-    print(coin)
+    money = repo.get_user_account(user.id).amount
 
-    dbCoin =  repo.get_coin_by_externId(coin)
+    if money < amount:
+        return jsonify({"msg": "Not enough money"}), 402
 
-    if dbCoin is None:
-        repo.add_coin(Coin(coin))
+    coin_repo.handle_coin_payment(user.id, amount, coin, price)
+
+    return jsonify({"msg": "Success"}), 200
 
 
-    return 200
+@user_controller.route('/edit', methods=['POST'])
+def edit():
+
+    if not request.json:
+        return jsonify({"msg": "Bad request"}), 400
+
+    data = request.get_json()
+    try:
+        email = data['email']
+        address = data['address']
+        city = data['city']
+        country = data['country']
+        phone = data['phone']
+        name = data['name']
+        last_name = data['lastName']
+        password = data['password']
+    except KeyError:
+        return jsonify({"msg": "Bad request"}), 400
+
+    if address is None or address == '':
+        return jsonify({"msg": "Bad request"}), 400
+
+    if city is None or city == '':
+        return jsonify({"msg": "Bad request"}), 400
+
+    if country is None or country == '':
+        return jsonify({"msg": "Bad request"}), 400
+
+    if phone is None or phone == '':
+        return jsonify({"msg": "Bad request"}), 400
+
+    if name is None or name == '':
+        return jsonify({"msg": "Bad request"}), 400
+
+    if last_name is None or last_name == '':
+        return jsonify({"msg": "Bad request"}), 400
+
+    #on odmah u konstruktoru hesira
+    new_user = User(name, last_name, password, address, city, country, email, phone)
+
+    #pa ovde ni nema polje "password" nego vec automatski je "password_hash"
+    repo.edit_user(new_user)
+
+    return jsonify({"msg": "Success"}), 200

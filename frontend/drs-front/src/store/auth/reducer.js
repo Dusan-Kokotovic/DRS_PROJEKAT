@@ -3,6 +3,8 @@ import {
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  EDIT_FAIL,
+  EDIT_SUCCESS,
 } from "../types";
 
 const user = localStorage.getItem("user");
@@ -13,12 +15,12 @@ export default function(state = initialState, action) {
   const { type, data } = action;
 
   switch (type) {
+    case EDIT_FAIL:
+    case EDIT_SUCCESS:
     case LOGIN_SUCCESS:
       return { isLoggedIn: true };
     case LOGIN_FAIL:
-      return { isLoggedIn: false };
     case REGISTER_FAIL:
-      return { isLoggedIn: false };
     case REGISTER_SUCCESS:
       return { isLoggedIn: false };
 

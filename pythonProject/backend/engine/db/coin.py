@@ -3,8 +3,7 @@ from . import database as db
 
 class Coin(db.Model):
 
-    def __init__(self, id,extern_api_id):
-        self.id = id
+    def __init__(self, extern_api_id):
         self.extern_api_id = extern_api_id
 
     id = db.Column(db.Integer(), index=True, primary_key=True)

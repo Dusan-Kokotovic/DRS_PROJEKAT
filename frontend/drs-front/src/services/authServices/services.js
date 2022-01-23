@@ -1,4 +1,4 @@
-import { loginPath, registerPath } from "./urls";
+import { loginPath, registerPath, editPath } from "./urls";
 
 export const userLogout = () => {
   localStorage.setItem("user", "");
@@ -70,6 +70,50 @@ export const userRegister = async (
   };
 
   return await fetch(registerPath, reqOptions)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json);
+    })
+    .catch((error) => {
+      let { msg } = error.json();
+      console.log(msg);
+    });
+};
+
+export const userEdit = async (
+  email,
+  name,
+  last_name,
+  address,
+  city,
+  country,
+  phone,
+  password
+) => {
+  // ovo iskreno nisam skontao kako radi, ali u sustini morao sam da zakomentarisem da bi stigao do bekenda
+  // let token = localStorage.getItem("user");
+  // if (token != null && token != "") return;
+
+  let data = {
+    email: email,
+    name: name,
+    lastName: last_name,
+    address: address,
+    city: city,
+    country: country,
+    phone: phone,
+    password: password,
+  };
+
+  let reqOptions = {
+    method: "post",
+    body: JSON.stringify(data),
+    headers: { "content-type": "application/json" },
+  };
+
+  return await fetch(editPath, reqOptions)
     .then((response) => {
       return response.json();
     })

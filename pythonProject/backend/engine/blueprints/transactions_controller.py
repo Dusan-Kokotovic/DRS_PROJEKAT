@@ -105,7 +105,7 @@ def send_transaction():
     coin_data = user.coins.filter_by(coin_id=coin).first()
 
     if coin_data is None or coin_data.amount < amount:
-        return jsonify({"msg": "Not enough funds"}), 400
+        return jsonify({"msg": "Not enough coins"}), 400
 
     transaction_data = {"sender": sender, "receiver": receiver_email, "amount": amount, "coin": coin}
     executorQueue.submit(do_transaction, transaction_data)

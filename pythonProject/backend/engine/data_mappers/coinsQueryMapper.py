@@ -3,7 +3,6 @@ import json
 
 class CoinsQueryMapper(object):
     def __map_coin(self, coin):
-        print(json.dumps(coin,indent=4))
         return {
             "externApiId": coin["externApiId"],
             "name": coin["name"],

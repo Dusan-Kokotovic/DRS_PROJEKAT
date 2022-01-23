@@ -6,6 +6,7 @@ import { getCurrentUserInfo } from "../store/userInfo/actions";
 import { Form, Button, FormField } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
 import { submitCardData } from "../store/userInfo/actions";
+import { editAction } from "../store/auth/actions";
 import { VERIFICATION_FAIL, VERIFICATION_SUCCESS } from "../store/types";
 
 const CardDataForm = ({ toggleForm }) => {
@@ -132,9 +133,41 @@ const Profile = ({ history }) => {
 
   const [isLoading, setLoading] = useState(false);
   const [showingVerificationForm, setShowingVerificationForm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const toggleForm = () => {
     setShowingVerificationForm(!showingVerificationForm);
+  };
+
+  const initEdit = () => {
+    console.log("edit is initiated");
+    setIsEditing(!isEditing);
+  };
+
+  const saveChanges = () => {
+    dispatch(
+      editAction(
+        user.email,
+        document.getElementById("nameInput").value,
+        document.getElementById("lastNameInput").value,
+        document.getElementById("addressInput").value,
+        document.getElementById("cityInput").value,
+        document.getElementById("countryInput").value,
+        document.getElementById("phoneInput").value,
+        document.getElementById("passwordInput").value
+      )
+    ).then((response) => {
+      console.log(response);
+      // window.location.reload();
+      setIsEditing(false);
+    });
+  };
+
+  const discardChanges = () => {
+    console.log("discarded changes");
+    console.log(document.getElementById("nameInput").value);
+    setIsEditing(false);
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -152,89 +185,202 @@ const Profile = ({ history }) => {
     <React.Fragment>
       <Header />
       <div className="container">
-        {isLoading ? (
-          <strong>Loading user data </strong>
-        ) : (
-          <div className="card-body">
-            <div className="row">
-              <div className="col-sm-3">
-                <p className="mb-0">Full Name</p>
-              </div>
-              <div className="col-sm-9">
-                <p className="text-muted mb-0">
-                  {user.name} {user.lastName}
-                </p>
-              </div>
-            </div>
-            <hr />
-            <div className="row">
-              <div className="col-sm-3">
-                <p className="mb-0">Email</p>
-              </div>
-              <div className="col-sm-9">
-                <p className="text-muted mb-0">{user.email}</p>
-              </div>
-            </div>
-            <hr />
-            <div className="row">
-              <div className="col-sm-3">
-                <p className="mb-0">Phone</p>
-              </div>
-              <div className="col-sm-9">
-                <p className="text-muted mb-0">{user.phone}</p>
-              </div>
-            </div>
-            <hr />
-            <div className="row">
-              <div className="col-sm-3">
-                <p className="mb-0">Address</p>
-              </div>
-              <div className="col-sm-9">
-                <p className="text-muted mb-0">{user.address}</p>
-              </div>
-            </div>
-            <hr />
-            <div className="row">
-              <div className="col-sm-3">
-                <p className="mb-0">City</p>
-              </div>
-              <div className="col-sm-9">
-                <p className="text-muted mb-0">{user.city}</p>
-              </div>
-            </div>
-            <hr />
-            <div className="row">
-              <div className="col-sm-3">
-                <p className="mb-0">Country</p>
-              </div>
-              <div className="col-sm-9">
-                <p className="text-muted mb-0">{user.country}</p>
-              </div>
-            </div>
-            <hr />
-            <div className="row">
-              <div className="col-sm-3">
-                <p className="mb-0">Account Balance</p>
-              </div>
-              <div className="col-sm-9">
-                <p className="text-muted mb-0">{user.money} $</p>
-              </div>
-            </div>
-            <hr />
-            {user.isVerified === false && (
-              <div className="row">
-                <div className="col-sm-3">
-                  <button
-                    className="btn btn-primary"
-                    onClick={handleVerification}
-                  >
-                    Verify
-                  </button>
+        <header className="jumbotron">
+          <h3>
+            {isLoading ? (
+              <strong>Loading user data </strong>
+            ) : (
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Email</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <p style={{ fontWeight: "450" }}>{user.email}</p>
+                  </div>
                 </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Name</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <input
+                      defaultValue={user.name}
+                      style={
+                        isEditing
+                          ? { fontWeight: "450" }
+                          : {
+                              pointerEvents: "none",
+                              border: "none",
+                              fontWeight: "450",
+                            }
+                      }
+                      id="nameInput"
+                    />
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Last Name</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <input
+                      defaultValue={user.lastName}
+                      style={
+                        isEditing
+                          ? { fontWeight: "450" }
+                          : {
+                              pointerEvents: "none",
+                              border: "none",
+                              fontWeight: "450",
+                            }
+                      }
+                      id="lastNameInput"
+                    />
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Phone</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <input
+                      defaultValue={user.phone}
+                      style={
+                        isEditing
+                          ? { fontWeight: "450" }
+                          : {
+                              pointerEvents: "none",
+                              border: "none",
+                              fontWeight: "450",
+                            }
+                      }
+                      id="phoneInput"
+                    />
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Address</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <input
+                      defaultValue={user.address}
+                      style={
+                        isEditing
+                          ? { fontWeight: "450" }
+                          : {
+                              pointerEvents: "none",
+                              border: "none",
+                              fontWeight: "450",
+                            }
+                      }
+                      id="addressInput"
+                    />
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">City</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <input
+                      defaultValue={user.city}
+                      style={
+                        isEditing
+                          ? { fontWeight: "450" }
+                          : {
+                              pointerEvents: "none",
+                              border: "none",
+                              fontWeight: "450",
+                            }
+                      }
+                      id="cityInput"
+                    />
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Country</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <input
+                      defaultValue={user.country}
+                      style={
+                        isEditing
+                          ? { fontWeight: "450" }
+                          : {
+                              pointerEvents: "none",
+                              border: "none",
+                              fontWeight: "450",
+                            }
+                      }
+                      id="countryInput"
+                    />
+                  </div>
+                </div>
+                <hr />
+                {isEditing && (
+                  <>
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <p className="mb-0">New Password</p>
+                      </div>
+                      <div className="col-sm-9">
+                        <input
+                          defaultValue={user.password}
+                          style={
+                            isEditing
+                              ? { fontWeight: "450" }
+                              : {
+                                  pointerEvents: "none",
+                                  border: "none",
+                                  fontWeight: "450",
+                                }
+                          }
+                          id="passwordInput"
+                        />
+                      </div>
+                    </div>
+                    <hr />
+                    {/* <div className="row">
+                      <div className="col-sm-3">
+                        <p className="mb-0">Confirm Password</p>
+                      </div>
+                      <div className="col-sm-9">
+                        <input defaultValue={user.password} style={isEditing ? {"fontWeight": "450"} : {"pointerEvents": "none", "border": "none", "fontWeight": "450"}} id="passwordInput" />
+                      </div>
+                    </div>
+                    <hr /> */}
+                  </>
+                )}
               </div>
             )}
-          </div>
-        )}
+            {isEditing ? (
+              <button
+                className="btn btn-danger"
+                onClick={() => discardChanges()}
+              >
+                Discard Changes
+              </button>
+            ) : (
+              <button className="btn btn-primary" onClick={() => initEdit()}>
+                Edit Data
+              </button>
+            )}
+            {isEditing && (
+              <button className="btn btn-success" onClick={() => saveChanges()}>
+                Save Changes
+              </button>
+            )}
+          </h3>
+        </header>
       </div>
       {showingVerificationForm && <CardDataForm toggleForm={toggleForm} />}
     </React.Fragment>

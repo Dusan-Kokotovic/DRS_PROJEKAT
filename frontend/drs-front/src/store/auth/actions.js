@@ -4,12 +4,15 @@ import {
   SET_MESSAGE,
   REGISTER_FAIL,
   REGISTER_SUCCESS,
+  EDIT_FAIL,
+  EDIT_SUCCESS,
 } from "../types";
 
 import {
   userLogin,
   userLogout,
   userRegister,
+  userEdit,
 } from "../../services/authServices/services";
 
 export const login = (email, password) => (dispatch) => {
@@ -65,4 +68,33 @@ export const registerAction = (
 
 export const logout = () => {
   userLogout();
+};
+export const editAction = (
+  email,
+  name,
+  lastName,
+  address,
+  city,
+  country,
+  phone,
+  password
+) => (dispatch) => {
+  return userEdit(
+    email,
+    name,
+    lastName,
+    address,
+    city,
+    country,
+    phone,
+    password
+  )
+    .then((success) => {
+      dispatch({ type: EDIT_SUCCESS });
+      return Promise.resolve();
+    })
+    .catch((error) => {
+      dispatch({ type: EDIT_FAIL });
+      return Promise.reject();
+    });
 };

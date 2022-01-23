@@ -3,59 +3,59 @@ import {
   userVerificationPath,
   getUserCoinsDataPath,
   depositMoneyPath,
-  ExchangeMoneyPath
+  ExchangeMoneyPath,
 } from "./urls";
 import { authHeader } from "../auth-header";
 
-
-export const exchangeMoney = async (amount,coin) =>{
+export const exchangeMoney = async (amount, coin, price) => {
   let token = localStorage.getItem("user");
 
-  if(token === null || token === "")return;
+  if (token === null || token === "") return;
 
   let data = {
-    amount : amount,
-    coin : coin
-  }
-
-  let reqOptions = {
-    method : "post",
-    body : JSON.stringify(data),
-    headers: {
-      "content-type": "application/json",
-      Authorization: token,
-    }
-  }
-
-  return fetch(ExchangeMoneyPath, reqOptions)
-  .then((response) => {
-    return response.json();
-  })
-  .then((json) => {
-    return json;
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-}
-
-export const depositMoney = async (amount) =>{
-  let token = localStorage.getItem("user");
-
-  if(token === null || token === "") return;
-
-  let data = {
-    amount : amount
+    amount: amount,
+    coin: coin,
+    price: price,
   };
 
   let reqOptions = {
-    method : "post",
-    body : JSON.stringify(data),
+    method: "post",
+    body: JSON.stringify(data),
     headers: {
       "content-type": "application/json",
       Authorization: token,
     },
-  }
+  };
+
+  return fetch(ExchangeMoneyPath, reqOptions)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      return json;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export const depositMoney = async (amount) => {
+  let token = localStorage.getItem("user");
+
+  if (token === null || token === "") return;
+
+  let data = {
+    amount: amount,
+  };
+
+  let reqOptions = {
+    method: "post",
+    body: JSON.stringify(data),
+    headers: {
+      "content-type": "application/json",
+      Authorization: token,
+    },
+  };
 
   return fetch(depositMoneyPath, reqOptions)
     .then((response) => {
@@ -67,8 +67,7 @@ export const depositMoney = async (amount) =>{
     .catch((error) => {
       console.log(error);
     });
-}
-
+};
 
 export const getUserCoinsData = async () => {
   let token = localStorage.getItem("user");

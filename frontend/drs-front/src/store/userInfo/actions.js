@@ -6,14 +6,14 @@ import {
   DEPOSIT,
   DEPOSIT_ERROR,
   EXCHANGE,
-  EXCHANGE_ERROR
+  EXCHANGE_ERROR,
 } from "../types";
 
 import {
   _getCurrentUserInfo,
   verifyUser,
-  depositMoney, 
-  exchangeMoney
+  depositMoney,
+  exchangeMoney,
 } from "../../services/userDataServices/services";
 
 export const getCurrentUserInfo = () => (dispatch) => {
@@ -47,36 +47,30 @@ export const submitCardData = (cardNumber, expirationDate, pinCode) => (
   );
 };
 
-export const DepositAmount = (amount) => (
-  dispatch
-) => {
-  return depositMoney (amount).then(
+export const DepositAmount = (amount) => (dispatch) => {
+  return depositMoney(amount).then(
     (response) => {
-      dispatch({type: DEPOSIT});
-      return Promise.resolve();
-      
-    },
-    (error) => {
-      dispatch({type : DEPOSIT_ERROR});
-      console.log(error);
-      return Promise.reject();
-    }
-  )
-}
-
-export const ExchangeAmount = (amount,coin) =>(
-  dispatch
-) => {
-  return exchangeMoney (amount,coin).then(
-    (response) => {
-      dispatch({type: EXCHANGE});
+      dispatch({ type: DEPOSIT });
       return Promise.resolve();
     },
     (error) => {
-      dispatch({type : EXCHANGE_ERROR});
+      dispatch({ type: DEPOSIT_ERROR });
       console.log(error);
       return Promise.reject();
     }
-  )
+  );
+};
 
-}
+export const ExchangeAmount = (amount, coin, price) => (dispatch) => {
+  return exchangeMoney(amount, coin, price).then(
+    (response) => {
+      dispatch({ type: EXCHANGE });
+      return Promise.resolve();
+    },
+    (error) => {
+      dispatch({ type: EXCHANGE_ERROR });
+      console.log(error);
+      return Promise.reject();
+    }
+  );
+};
