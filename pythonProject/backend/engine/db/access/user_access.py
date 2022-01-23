@@ -2,6 +2,7 @@ import datetime
 
 from ..user import User
 from ..card import Card
+from ..coin import Coin
 from ..transaction import Transaction, TransactionState
 from ..account import Account
 from ..coin_user_association import CoinUserAssociation
@@ -112,6 +113,20 @@ class CoinAccess(object):
 
         return user.coins
 
+    def get_coin_by_externId(self,coinId):
+        coin = Coin.query.filter_by(id=coinId).first()
+
+        return coin
+    def add_coin(self,coin):
+        if coin is None:
+            return
+        database.session.add(coin)
+        database.session.commit()
+        return
+    def add_association(self,):
+
+        return
+
 
 class UserAccess(object):
 
@@ -171,8 +186,3 @@ class UserAccess(object):
         if acc is not None:
             acc.amount +=amount
             database.session.commit()
-
-
-
-
-

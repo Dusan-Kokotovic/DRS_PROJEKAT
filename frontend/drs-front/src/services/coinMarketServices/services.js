@@ -18,10 +18,11 @@ export const getCoinsMarket = async () =>{
 
     return fetch(coinsMarketPath, reqOptions)
     .then((response) => {
-      response.json();
+     return response.json();
     })
-    .then((json) => {
-      return json;
+    .then(({data}) => {
+      console.log(data);
+      return data;
     })
     .catch((error) => {
       console.log(error);

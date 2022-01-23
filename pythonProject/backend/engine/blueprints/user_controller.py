@@ -1,7 +1,8 @@
 import datetime
 
 from flask import Blueprint, request, jsonify
-from engine.db.access.user_access import UserAccess, User, Card
+from engine.db.access.user_access import UserAccess, User, Card, Coin
+from engine.db.acces.coin_user_association import CoinUserAssociation
 from engine.app.config import Config
 from email_validator import validate_email
 from .helpers import check_logged_in
@@ -171,7 +172,7 @@ def register():
 
     return 200
 
-@user_controller.route('/withdraw', methods=['POST'])
+@user_controller.route('/deposit', methods=['POST'])
 def withdraw():
     user = check_logged_in(repo)
 
@@ -191,3 +192,33 @@ def withdraw():
 
     repo.add_money(user.id ,float(amount))
     return  jsonify({"data": "Success"}), 200
+
+@user_controller.route('/exchange', methods=['POST'])
+def exchange():
+    user = check_logged_in(repo)
+
+    if user is False:
+        return jsonify({"msg": "Unauthorized"}), 401
+
+    if not request.json:
+        return jsonify({"msg": "Bad request"}), 400
+
+    data = request.get_json()
+
+    try:
+        amount = data['amount']
+        coin = data['coin']
+
+    except KeyError:
+        return jsonify({"msg": "Bad request"}), 400
+
+    print(amount)
+    print(coin)
+
+    dbCoin =  repo.get_coin_by_externId(coin)
+
+    if dbCoin is None:
+        repo.add_coin(Coin(coin))
+
+
+    return 200

@@ -14,8 +14,9 @@ import { clearMessage } from "./store/message/actions";
 import { history } from "./helpers/history";
 import SendTransaction from "./components/SendTransaction";
 import Error from "./components/Error";
-import Withdraw from "./components/Withdraw";
+import Withdraw from "./components/Deposit";
 import Exchange from "./components/Exchange";
+import Deposit from "./components/Deposit";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -73,8 +74,8 @@ const App = () => {
           />
           <Route
             exact
-            path="/withdraw"
-            element={<Withdraw history={history} />}
+            path="/deposit"
+            element={<Deposit history={history} />}
           />
           <Route
             exact

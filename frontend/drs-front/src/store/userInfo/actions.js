@@ -3,8 +3,8 @@ import {
   GET_CURRENT_USER_INFO_FAIL,
   VERIFICATION_FAIL,
   VERIFICATION_SUCCESS,
-  WITHDRAW,
-  WITHDRAW_ERROR,
+  DEPOSIT,
+  DEPOSIT_ERROR,
   EXCHANGE,
   EXCHANGE_ERROR
 } from "../types";
@@ -12,7 +12,7 @@ import {
 import {
   _getCurrentUserInfo,
   verifyUser,
-  withdrawMoney, 
+  depositMoney, 
   exchangeMoney
 } from "../../services/userDataServices/services";
 
@@ -47,27 +47,27 @@ export const submitCardData = (cardNumber, expirationDate, pinCode) => (
   );
 };
 
-export const WithdrawAmount = (amount) => (
+export const DepositAmount = (amount) => (
   dispatch
 ) => {
-  return withdrawMoney (amount).then(
+  return depositMoney (amount).then(
     (response) => {
-      dispatch({type: WITHDRAW});
+      dispatch({type: DEPOSIT});
       return Promise.resolve();
       
     },
     (error) => {
-      dispatch({type : WITHDRAW_ERROR});
+      dispatch({type : DEPOSIT_ERROR});
       console.log(error);
       return Promise.reject();
     }
   )
 }
 
-export const ExchangeAmount = (amount) =>(
+export const ExchangeAmount = (amount,coin) =>(
   dispatch
 ) => {
-  return exchangeMoney (amount).then(
+  return exchangeMoney (amount,coin).then(
     (response) => {
       dispatch({type: EXCHANGE});
       return Promise.resolve();
