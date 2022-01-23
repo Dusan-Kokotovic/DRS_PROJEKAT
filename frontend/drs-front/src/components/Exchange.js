@@ -3,8 +3,37 @@ import { useSelector, useDispatch } from "react-redux";
 import Header from "./Header";
 import { Form, Button } from "semantic-ui-react";
 import { GetCoins } from "../store/coinMarket/actions";
+import { ExchangeAmount } from "../store/userInfo/actions";
 import { useForm } from "react-hook-form";
 import { validateNumber } from "../helpers/validation";
+
+const Coin = ({ price, amountHeld, coinId, symbol }) => {
+  return (
+    <option value={coinId} key={coinId} data-amount={amountHeld}>
+      {symbol}
+    </option>
+  );
+};
+
+const CoinList = ({ coinDataList, register }) => {
+  return (
+    <select className="form-select form-select w-100" {...register("coinId")}>
+      <option value={-1} selected>
+        Select a coin
+      </option>
+      {coinDataList.map((x) => {
+        return (
+          <Coin
+            price={x.price}
+            amountHeld={x.amountHeld}
+            coinId={x.externApiId}
+            symbol={x.symbol}
+          />
+        );
+      })}
+    </select>
+  );
+};
 
 
 const Exchange = ({history}) =>{
@@ -13,6 +42,7 @@ const Exchange = ({history}) =>{
     const coins = useSelector((state) => state.coinMarket)
     const {isLoggedIn} = useSelector((state) => state.auth)
     const [amountError,setAmountError] = useState("");
+    const [message, setMessage] = useState("");
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(false);
 
@@ -28,13 +58,12 @@ const Exchange = ({history}) =>{
       } = useForm();
 
       useEffect(() => {
-        setLoading(true);
-        dispatch(GetCoins()).then((response) => {
-        setLoading(false);
-         });
+       dispatch(GetCoins());
         }, []);
 
       const onSubmit = (data) =>{
+
+        console.log(data);
 
         if (!validateNumber(data.amount)) {
             setAmountError("Amount is not valid");
@@ -42,11 +71,26 @@ const Exchange = ({history}) =>{
             
           } else {
             setAmountError("");
-          }
+        }
 
-         //
+        if (data.coinId === "-1") {
+          setMessage("Choose a coin");
+          return;
+        } else {
+          setMessage("");
+        }
 
-      }
+        console.log(data.coinId);
+        
+        dispatch(
+          
+          ExchangeAmount(Number(data.amount), Number(data.coinId))
+        ).then((response) => {
+          console.log("Started a transaction");
+        });
+
+        
+      }  
 
     return(
         <>
@@ -70,8 +114,16 @@ const Exchange = ({history}) =>{
             </p>
           )}
            {amountError && <p style={{ color: "red" }}>{amountError}</p>}
-
-          <Button type="submit" className="btn btn-primary m-3   p-1">
+           <Form.Field className="m-2">
+                <CoinList coinDataList={coins} register={register} />
+            </Form.Field>
+            {errors.amount && (
+            <p style={{ color: "red" }} className="m-2">
+              Please select coin
+            </p>
+          )}
+           {message && <p style={{ color: "red" }}>{message}</p>}
+          <Button type="submit" className="btn btn-primary m-2">
             Buy coins
           </Button>
              </Form>

@@ -12,7 +12,7 @@ import {
   ) => {
     return getCoinsMarket ().then(
       (response) => {
-        dispatch({type: COIN_MARKET_DATA_FETCH_SUCCESS});
+        dispatch({type: COIN_MARKET_DATA_FETCH_SUCCESS, payload : response});
         return Promise.resolve();
       },
       (error) => {

@@ -2,19 +2,20 @@ import {
   getUserInfoPath,
   userVerificationPath,
   getUserCoinsDataPath,
-  withdrawMoneyPath,
+  depositMoneyPath,
   ExchangeMoneyPath
 } from "./urls";
 import { authHeader } from "../auth-header";
 
 
-export const exchangeMoney = async (amount) =>{
+export const exchangeMoney = async (amount,coin) =>{
   let token = localStorage.getItem("user");
 
   if(token === null || token === "")return;
 
   let data = {
-    amount : amount
+    amount : amount,
+    coin : coin
   }
 
   let reqOptions = {
@@ -38,7 +39,7 @@ export const exchangeMoney = async (amount) =>{
   });
 }
 
-export const withdrawMoney = async (amount) =>{
+export const depositMoney = async (amount) =>{
   let token = localStorage.getItem("user");
 
   if(token === null || token === "") return;
@@ -56,7 +57,7 @@ export const withdrawMoney = async (amount) =>{
     },
   }
 
-  return fetch(withdrawMoneyPath, reqOptions)
+  return fetch(depositMoneyPath, reqOptions)
     .then((response) => {
       return response.json();
     })

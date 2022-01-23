@@ -1,12 +1,15 @@
+import json
+
 
 class CoinsQueryMapper(object):
     def __map_coin(self, coin):
+        print(json.dumps(coin,indent=4))
         return {
-            "externApiId": coin.id,
-            "name": coin.name,
-            "price": coin.price,
-            "percent24hChange": coin.percentChange24h,
-            "symbol": coin.symbol
+            "externApiId": coin["externApiId"],
+            "name": coin["name"],
+            "price": coin["usd_price"],
+            "percent24hChange": coin["percentChange24h"],
+            "symbol": coin["symbol"]
         }
 
     def __map_coin_user_association(self, coin_user_assoc, coin):
@@ -15,7 +18,7 @@ class CoinsQueryMapper(object):
             "externApiId": coin_user_assoc.coin.extern_api_id,
             "userId": coin_user_assoc.owner_id,
             "amountHeld": coin_user_assoc.amount,
-            "coinName": coin_user_assoc.coin.name,
+            "coinName": coin["name"],
             "price": coin["usd_price"],
             "percentChange24h": coin["percentChange24h"],
             "symbol": coin["symbol"]

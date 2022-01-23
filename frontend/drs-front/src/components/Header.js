@@ -47,8 +47,8 @@ const Header = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/withdraw">
-                  Withdraw
+                <Link className="nav-link" to="/deposit">
+                  Deposit
                 </Link>
               </li>
               <li className="nav-item">

@@ -4,10 +4,10 @@ import Header from "./Header";
 import { Form, Button } from "semantic-ui-react";
 import { set, useForm } from "react-hook-form";
 import { validateNumber } from "../helpers/validation";
-import { WithdrawAmount } from "../store/userInfo/actions";
+import { DepositAmount } from "../store/userInfo/actions";
 import { getCurrentUserInfo } from "../store/userInfo/actions";
 
-const Withdraw = ({history}) => {
+const Deposit = ({history}) => {
     const isVerified = useSelector((state) =>state.userInfo.isVerified);
     const {isLoggedIn} = useSelector((state) => state.auth)
     const [amountError,setAmountError] = useState("");
@@ -34,7 +34,7 @@ const Withdraw = ({history}) => {
             setAmountError("");
           }
 
-          dispatch(WithdrawAmount(data.amount)).then((response) => {
+          dispatch(DepositAmount(data.amount)).then((response) => {
             history.push("/profile");
             window.location.reload();
           });
@@ -66,7 +66,7 @@ const Withdraw = ({history}) => {
            {amountError && <p style={{ color: "red" }}>{amountError}</p>}
 
             <Button type="submit" className="btn btn-primary m-3   p-1">
-            Withdraw
+            Deposit
           </Button>
       </Form>
 
@@ -78,4 +78,4 @@ const Withdraw = ({history}) => {
 }
 
 
-export default Withdraw;
+export default Deposit;
