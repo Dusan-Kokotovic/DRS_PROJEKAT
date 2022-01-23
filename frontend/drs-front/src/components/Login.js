@@ -97,7 +97,7 @@ const Login = ({ history }) => {
             </div>
           </form>
         </div>
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}{" "}
       </div>
     </React.Fragment>
   );

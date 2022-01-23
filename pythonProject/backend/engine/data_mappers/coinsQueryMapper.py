@@ -2,11 +2,11 @@
 class CoinsQueryMapper(object):
     def __map_coin(self, coin):
         return {
-            "externApiId": coin.id,
-            "name": coin.name,
-            "price": coin.price,
-            "percent24hChange": coin.percentChange24h,
-            "symbol": coin.symbol
+            "externApiId": coin["externApiId"],
+            "name": coin["name"],
+            "price": coin["usd_price"],
+            "percent24hChange": coin["percentChange24h"],
+            "symbol": coin["symbol"]
         }
 
     def __map_coin_user_association(self, coin_user_assoc, coin):

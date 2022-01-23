@@ -14,6 +14,7 @@ const initialState = {
   phone: "",
   email: "",
   isVerified: false,
+  money: 0,
 };
 
 export default function(state = initialState, action) {
@@ -31,6 +32,7 @@ export default function(state = initialState, action) {
         city: payload.city,
         email: payload.email,
         isVerified: payload.isVerified,
+        money: payload.money,
       };
     case GET_CURRENT_USER_INFO_FAIL:
     case VERIFICATION_FAIL:

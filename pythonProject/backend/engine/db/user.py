@@ -27,7 +27,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(50), nullable=False, unique=True)
     phone = db.Column(db.String(12), nullable=False)
     card = db.relationship('Card', backref='user_owns', uselist='False', lazy='dynamic')
-    account = db.relationship('Account', backref='user', uselist='False')
+    account = db.relationship('Account', backref='user', uselist='False', lazy='dynamic')
 
     sent_transactions = db.relationship('Transaction', backref='sender', lazy='dynamic',
                                         foreign_keys='Transaction.sender_id')

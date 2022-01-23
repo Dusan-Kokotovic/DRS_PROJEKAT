@@ -155,10 +155,10 @@ class UserAccess(object):
         database.session.commit()
 
     def get_user_account(self, user_id: int)->Account:
-        user = self.get_by_id(user_id)
+        account = Account.query.filter_by(owner_id=user_id).first()
 
-        if user is not None:
-            return user.account
+        if account is not None:
+            return account
 
     def remove_card(self, user_id: int):
         card = self.get_card(user_id)

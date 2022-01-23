@@ -5,7 +5,6 @@ from engine.db.access.user_access import UserAccess, User, Card
 from engine.app.config import Config
 from email_validator import validate_email
 from .helpers import check_logged_in
-from flask import make_response
 
 
 user_controller = Blueprint('user_controller', __name__, url_prefix='/api/user')
@@ -13,6 +12,7 @@ repo = UserAccess()
 
 def get_user_data(user: User):
     is_verified = True if repo.get_card(user.id) is not None else False
+    account = repo.get_user_account(user.id)
     return jsonify(
         {
             'name': user.name,
@@ -22,7 +22,8 @@ def get_user_data(user: User):
             'country': user.country,
             'phone': user.phone,
             'email': user.email,
-            'isVerified': is_verified
+            'isVerified': is_verified,
+            'money': account.amount if account is not None else 0
         })
 
 
@@ -189,4 +190,4 @@ def withdraw():
         return jsonify({"msg": "Bad request"}), 400
 
     repo.add_money(user.id ,float(amount))
-    return  200
+    return  jsonify({"data": "Success"}), 200
