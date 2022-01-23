@@ -18,10 +18,19 @@ export const userLogin = async (email, password) => {
 
   return await fetch(loginPath, reqOptions)
     .then((response) => {
-      return response.json();
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        console.log(response.status);
+        return null;
+      }
     })
     .then(({ token }) => {
-      localStorage.setItem("user", token);
+      if (token != null) {
+        localStorage.setItem("user", token);
+        return true;
+      }
+      return false;
     })
     .catch((error) => {
       let { msg } = error.json();

@@ -49,9 +49,13 @@ export const registerAction = (
     country,
     phone
   )
-    .then((success) => {
-      dispatch({ type: REGISTER_SUCCESS });
-      return Promise.resolve();
+    .then((isValid) => {
+      if (isValid) {
+        dispatch({ type: REGISTER_SUCCESS });
+        return Promise.resolve();
+      } else {
+        return Promise.reject();
+      }
     })
     .catch((error) => {
       dispatch({ type: REGISTER_FAIL });

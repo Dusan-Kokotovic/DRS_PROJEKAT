@@ -21,27 +21,9 @@ def values():
         return jsonify({"msg": 'Unauthorized'}), 401
 
     try:
-        return jsonify({"data":coinMapper.map_coins(coinApi.get_coins_data(False))}), 200
+        return jsonify({"data": coinMapper.map_coins(coinApi.get_coins_data(False))}), 200
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         return jsonify({"msg": str(e)})
-
-
-@coin_controller.route('/price', methods=['POST'])
-def get_latest_coin_price():
-
-    user = check_logged_in(repo)
-
-    if user is False:
-        return jsonify({"msg": "Unauthorized"}), 401
-
-    if not request.is_json:
-        return jsonify({"msg": "Bad request"}), 400
-
-    data = request.get_json()
-    try:
-        extern_coin_id = data["externApiId"]
-    except KeyError:
-        return jsonify({"msg": "Bad request"}), 400
 
 
 @coin_controller.route("/user", methods=['GET'])

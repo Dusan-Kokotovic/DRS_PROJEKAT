@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/auth/actions";
 import { setMessage } from "../store/message/actions";
 import { validateEmail, validatePassword } from "../helpers/validation";
 import Header from "./Header";
+import { useLinkClickHandler } from "react-router-dom";
 
 const required = (value) => {
   if (!value) {
@@ -16,7 +17,7 @@ const required = (value) => {
 };
 
 const Login = ({ history }) => {
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn, message } = useSelector((state) => state.auth);
   if (isLoggedIn) {
     history.push("/");
     window.location.reload();
@@ -24,8 +25,7 @@ const Login = ({ history }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-
-  const { message } = useSelector((state) => state.message);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const dispatch = useDispatch();
 
@@ -44,14 +44,16 @@ const Login = ({ history }) => {
     setLoading(true);
 
     if (validateEmail(email) && validatePassword(password)) {
-      dispatch(login(email, password)).then((response) => {
-        setEmail("");
-        setPassword("");
-        setLoading(false);
-
-        history.push("/profile");
-        window.location.reload();
-      });
+      dispatch(login(email, password))
+        .then(() => {
+          setErrorMessage("");
+          history.push("/profile");
+          window.location.reload();
+        })
+        .catch(() => {
+          setErrorMessage("Invalid email or password");
+          setLoading(false);
+        });
     } else {
       dispatch(setMessage("Invalid email or password"));
     }
@@ -93,15 +95,9 @@ const Login = ({ history }) => {
                 <span>Login</span>
               </button>
             </div>
-            {message && (
-              <div className="form-group">
-                <div className="alert alert-danger" role="alert">
-                  {message}
-                </div>
-              </div>
-            )}
           </form>
         </div>
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       </div>
     </React.Fragment>
   );
