@@ -11,6 +11,6 @@ export default function(state = initialState, action) {
     case GET_USER_COIN_DATA_FAIL:
       return state;
     default:
-      return initialState;
+      return state;
   }
 }

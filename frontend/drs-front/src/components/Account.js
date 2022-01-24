@@ -14,7 +14,7 @@ const Coin = ({ price, amountHeld, coinId, name, index, change, symbol }) => {
       <td>{price.toFixed(2)} $</td>
       <td>{change.toFixed(2)} %</td>
       <td>{amountHeld}</td>
-      <td>{(amountHeld * price).toFixed(2)} $</td>
+      <td>{(amountHeld * price).toFixed(4)} $</td>
     </tr>
   );
 };

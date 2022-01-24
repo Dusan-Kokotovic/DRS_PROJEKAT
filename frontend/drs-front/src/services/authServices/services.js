@@ -70,15 +70,13 @@ export const userRegister = async (
   };
 
   return await fetch(registerPath, reqOptions)
-    .then((response) => {
-      return response.json();
-    })
-    .then((json) => {
-      console.log(json);
-    })
+    .then((response) =>
+      response.json().then(({ msg }) => {
+        return { status: response.status, msg };
+      })
+    )
     .catch((error) => {
-      let { msg } = error.json();
-      console.log(msg);
+      console.log(error);
     });
 };
 
@@ -93,8 +91,8 @@ export const userEdit = async (
   password
 ) => {
   // ovo iskreno nisam skontao kako radi, ali u sustini morao sam da zakomentarisem da bi stigao do bekenda
-  // let token = localStorage.getItem("user");
-  // if (token != null && token != "") return;
+  let token = localStorage.getItem("user");
+  if (token === null || token === "") return;
 
   let data = {
     email: email,
@@ -110,7 +108,7 @@ export const userEdit = async (
   let reqOptions = {
     method: "post",
     body: JSON.stringify(data),
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", Authorization: token },
   };
 
   return await fetch(editPath, reqOptions)

@@ -15,6 +15,7 @@ import {
   depositMoney,
   exchangeMoney,
 } from "../../services/userDataServices/services";
+import { setMessage } from "../message/actions";
 
 export const getCurrentUserInfo = () => (dispatch) => {
   return _getCurrentUserInfo()
@@ -34,17 +35,16 @@ export const getCurrentUserInfo = () => (dispatch) => {
 export const submitCardData = (cardNumber, expirationDate, pinCode) => (
   dispatch
 ) => {
-  return verifyUser(cardNumber, expirationDate, pinCode).then(
-    (response) => {
+  return verifyUser(cardNumber, expirationDate, pinCode).then((response) => {
+    if (response.status === 200) {
       dispatch({ type: VERIFICATION_SUCCESS, payload: response });
-      return Promise.resolve();
-    },
-    (error) => {
+      dispatch(setMessage("Successfully verified"));
+    } else {
+      console.log(response);
       dispatch({ type: VERIFICATION_FAIL });
-      console.log(error);
-      return Promise.reject();
     }
-  );
+    return Promise.resolve();
+  });
 };
 
 export const DepositAmount = (amount) => (dispatch) => {
@@ -62,15 +62,13 @@ export const DepositAmount = (amount) => (dispatch) => {
 };
 
 export const ExchangeAmount = (amount, coin, price) => (dispatch) => {
-  return exchangeMoney(amount, coin, price).then(
-    (response) => {
+  return exchangeMoney(amount, coin, price).then((response) => {
+    if (response.status === 200) {
       dispatch({ type: EXCHANGE });
-      return Promise.resolve();
-    },
-    (error) => {
+    } else {
       dispatch({ type: EXCHANGE_ERROR });
-      console.log(error);
-      return Promise.reject();
     }
-  );
+    dispatch(setMessage(response.msg));
+    return Promise.resolve();
+  });
 };

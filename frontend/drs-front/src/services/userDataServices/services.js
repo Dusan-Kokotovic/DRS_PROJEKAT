@@ -28,14 +28,14 @@ export const exchangeMoney = async (amount, coin, price) => {
   };
 
   return fetch(ExchangeMoneyPath, reqOptions)
-    .then((response) => {
-      return response.json();
-    })
-    .then((json) => {
-      return json;
-    })
+    .then((response) =>
+      response.json().then(({ msg }) => {
+        return { status: response.status, msg };
+      })
+    )
     .catch((error) => {
       console.log(error);
+      return error;
     });
 };
 
@@ -134,9 +134,11 @@ export const verifyUser = async (cardNumber, expirationDate, pinCode) => {
   };
 
   return fetch(userVerificationPath, reqOptions)
-    .then((response) => {
-      return response.json();
-    })
+    .then((response) =>
+      response.json().then((data) => {
+        return { status: response.status, data };
+      })
+    )
     .then((json) => {
       return json;
     })

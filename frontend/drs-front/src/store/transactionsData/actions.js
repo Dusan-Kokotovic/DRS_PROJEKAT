@@ -16,16 +16,19 @@ import {
   sendTransaction,
 } from "../../services/transactionsDataServices/services";
 
+import { setMessage } from "../message/actions";
+
 export const send = (receiver, amount, coin) => (dispatch) => {
-  return sendTransaction(receiver, coin, amount)
-    .then((response) => {
+  return sendTransaction(receiver, coin, amount).then((response) => {
+    if (response.status === 200) {
+      dispatch(setMessage(response.msg));
       dispatch({ type: SEND_TRANSACTION_SUCCESS });
-      return Promise.resolve();
-    })
-    .catch((error) => {
+    } else {
+      dispatch(setMessage(response.msg));
       dispatch({ type: SEND_TRANSACTION_FAIL });
-      return Promise.reject();
-    });
+    }
+    return Promise.resolve();
+  });
 };
 
 export const filter = (

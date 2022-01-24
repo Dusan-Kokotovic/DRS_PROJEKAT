@@ -71,15 +71,31 @@ def do_transaction(transaction_data):
     receiver_email = transaction_data["receiver"]
     amount = transaction_data["amount"]
     coin = transaction_data["coin"]
+    gas = transaction_data['gas']
 
     q = Queue()
-    id = transaction_repo.start_transaction(sender, receiver_email, amount,datetime.datetime.now())
-    process = Process(target=thread_spawner, args=[transaction_data, q],daemon=True)
+    id = transaction_repo.start_transaction(sender, receiver_email, amount, datetime.datetime.now(), gas)
+    process = Process(target=thread_spawner, args=[transaction_data, q], daemon=True)
     process.start()
     process.join()
     hash = q.get()
     transaction_repo.commit_transaction(id, hash)
     transaction_repo.change_user_balances(sender, receiver_email, coin, amount)
+
+
+def do_bad_transaction(transaction_data):
+    sender = transaction_data["sender"]
+    receiver_email = transaction_data["receiver"]
+    amount = transaction_data["amount"]
+    gas = transaction_data['gas']
+
+    q = Queue()
+    id = transaction_repo.start_transaction(sender, receiver_email, amount, datetime.datetime.now(), gas)
+    process = Process(target=thread_spawner, args=[transaction_data, q], daemon=True)
+    process.start()
+    process.join()
+    hash = q.get()
+    transaction_repo.deny_transaction(id, hash)
 
 @transaction_controller.route("/send", methods=['POST'])
 def send_transaction():
@@ -101,14 +117,23 @@ def send_transaction():
         coin = data["coinId"]
     except KeyError:
         return jsonify({"msg": "Bad request"}), 400
+    gas = 0.05 * amount
+    transaction_data = {"sender": sender, "receiver": receiver_email, "amount": amount, "coin": coin, "gas":gas}
 
     coin_data = user.coins.filter_by(coin_id=coin).first()
 
-    if coin_data is None or coin_data.amount < amount:
-        return jsonify({"msg": "Not enough coins"}), 400
+    receiver = user_repo.get_by_email(receiver_email)
 
-    transaction_data = {"sender": sender, "receiver": receiver_email, "amount": amount, "coin": coin}
+    if receiver is None:
+        return jsonify({"msg": "Receiver doesn't exist"}), 404
+
+    if coin_data is None or coin_data.amount < (amount + gas):
+        transaction_data["isValid"] = False
+        executorQueue.submit(do_bad_transaction, transaction_data)
+        return jsonify({"msg": "Not enough coins transaction will be denied"}), 400
+
+    transaction_data['isValid'] = True
     executorQueue.submit(do_transaction, transaction_data)
-    return jsonify({"data": "Successfully started a transaction"}), 200
+    return jsonify({"msg": "Successfully started a transaction"}), 200
 
 

@@ -1,110 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import Header from "./Header";
-import { Form, Button, FormField } from "semantic-ui-react";
-import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { Button } from "semantic-ui-react";
+import TransactionsFilterForm from "./TransactionsFilterForm";
 
 import {
   getSentTransactions,
   getReceivedTransactions,
   filter,
 } from "../store/transactionsData/actions";
-import { validateNumber } from "../helpers/validation";
+import { __baseUrl } from "../services/apiUrls";
 
-const FilterForm = ({ isSentTransactions, fetchData }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const onFilter = (data) => {
-    fetchData(
-      data.name,
-      data.amountFrom,
-      data.amountTo,
-      data.dateFrom,
-      data.dateTo,
-      isSentTransactions
-    );
-  };
-
-  return (
-    <Form onSubmit={handleSubmit(onFilter)} className="form-group">
-      <div style={{ float: "left", margin: 4 }}>
-        <FormField>
-          <input
-            placeholder={isSentTransactions ? "Receivers Name" : "Senders Name"}
-            type="text"
-            {...register("name")}
-          />
-        </FormField>
-      </div>
-
-      <div style={{ float: "left", margin: 4 }}>
-        <FormField>
-          <input
-            placeholder="Amount From"
-            type="text"
-            {...register("amountFrom")}
-          />
-        </FormField>
-        <FormField>
-          <input
-            placeholder="Amount To"
-            type="text"
-            {...register("amountTo")}
-          />
-        </FormField>
-      </div>
-      <div style={{ float: "left", margin: 4 }}>
-        <FormField>
-          <label>Date From</label>
-          <input
-            type="date"
-            placeholder="Timestamp From"
-            {...register("dateFrom")}
-          />
-        </FormField>
-        <FormField>
-          <label className="label">Date To </label>
-          <input
-            type="date"
-            placeholder="Timestamp To"
-            {...register("dateTo")}
-          />
-        </FormField>
-      </div>
-      <div style={{ float: "left", margin: 4 }}>
-        <Button type="submit" className="btn btn-primary">
-          Filter
-        </Button>
-      </div>
-    </Form>
-  );
-};
-
-const Transactions = ({ isSentTransactions, history }) => {
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  if (!isLoggedIn) {
-    history.push("/");
-    window.location.reload();
-  }
-  const transactions = useSelector((state) => state.transactionsData);
-  const [isLoading, setLoading] = useState(false);
+const Transactions = ({ array, isSentTransactions }) => {
   const [filterSeen, setFilterSeen] = useState(false);
-
+  const [render, setRender] = useState(false);
+  const [sortVals, setSortVals] = useState({});
   const dispatch = useDispatch();
 
+  const renderComponent = () => {
+    setRender(!render);
+  };
+
   useEffect(() => {
-    setLoading(true);
-    if (isSentTransactions) {
-      dispatch(getSentTransactions());
-    } else {
-      dispatch(getReceivedTransactions());
+    if (array !== undefined && array.length > 0) {
+      setInitialSortVals(array[0]);
     }
-    setLoading(false);
-  }, [isSentTransactions]);
+    console.log(sortVals);
+  }, []);
+  useEffect(() => {}, [render]);
+
+  const setInitialSortVals = (transaction) => {
+    let valDict = {};
+    Object.keys(transaction).map((val) => {
+      valDict[val] = 1;
+    });
+    setSortVals(valDict);
+  };
 
   const onFilter = (
     email,
@@ -119,10 +49,10 @@ const Transactions = ({ isSentTransactions, history }) => {
     );
   };
 
-  const getSum = () => {
-    if (transactions !== null && transactions.length > 0) {
+  const getSum = (array) => {
+    if (array !== null && array.length > 0) {
       let sum = 0;
-      for (let transaction of transactions) {
+      for (let transaction of array) {
         sum += transaction.amount;
       }
       return sum;
@@ -134,46 +64,82 @@ const Transactions = ({ isSentTransactions, history }) => {
     setFilterSeen(!filterSeen);
   };
 
+  const flipSortVal = (key) => {
+    let newVals = sortVals;
+    if (newVals[key] == -1) {
+      newVals[key] = 1;
+    } else if (newVals[key] == 1) {
+      newVals[key] = -1;
+    }
+    setSortVals(newVals);
+  };
+
+  const compareBy = (key) => {
+    return (a, b) => {
+      if (a[key] > b[key]) return 1;
+      else if (a[key] < b[key]) return -1;
+      return 0;
+    };
+  };
+
+  const sortBy = (key) => {
+    console.log(sortVals[key]);
+    if (sortVals[key] == 1) array.sort(compareBy(key));
+    else array.sort(compareBy(key)).reverse();
+    flipSortVal(key);
+    renderComponent();
+  };
+
   return (
     <React.Fragment>
-      <Header />
-      <Button className="btn btn-primary" onClick={onFiltersClick}>
-        Filters
-      </Button>
-      {filterSeen && (
-        <FilterForm
-          isSentTransactions={isSentTransactions}
-          fetchData={onFilter}
-        />
-      )}
-
-      {transactions && transactions.length > 0 && (
+      {array && array.length > 0 ? (
         <React.Fragment>
+          <Button className="btn btn-primary" onClick={onFiltersClick}>
+            Filters
+          </Button>
+          {filterSeen && (
+            <TransactionsFilterForm
+              isSentTransactions={isSentTransactions}
+              fetchData={onFilter}
+            />
+          )}
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">
+                <th scope="col" onClick={() => sortBy("name")}>
                   {isSentTransactions ? "Receivers Name" : "Senders Name"}
                 </th>
-                <th scope="col">
+                <th scope="col" onClick={() => sortBy("lastName")}>
                   {isSentTransactions
                     ? "Receivers Last Name"
                     : "Senders Last Name"}
                 </th>
-                <th scope="col">Email</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Timestamp</th>
-                <th scope="col">State</th>
+                <th scope="col" onClick={() => sortBy("email")}>
+                  Email
+                </th>
+                <th scope="col" onClick={() => sortBy("amount")}>
+                  Sent Amount
+                </th>
+                <th scope="col" onClick={() => sortBy("gas")}>
+                  Gas Price
+                </th>
+                <th scope="col" onClick={() => sortBy("timestamp")}>
+                  Timestamp
+                </th>
+                <th scope="col" onClick={() => sortBy("state")}>
+                  State
+                </th>
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => {
+              {array.map((transaction) => {
                 return (
                   <tr key={transaction.id}>
                     <td>{transaction.name}</td>
                     <td>{transaction.lastName}</td>
                     <td>{transaction.email}</td>
                     <td>{transaction.amount}</td>
+                    <td>{transaction.gas}</td>
                     <td>{transaction.timestamp}</td>
                     <td>{transaction.state}</td>
                   </tr>
@@ -182,9 +148,13 @@ const Transactions = ({ isSentTransactions, history }) => {
             </tbody>
           </table>
           <div>
-            <label>Total Amount: {getSum(transactions)}</label>
+            <label>Total Amount: {getSum(array)}</label>
           </div>
         </React.Fragment>
+      ) : (
+        <p>
+          <b>No transactions yet</b>
+        </p>
       )}
     </React.Fragment>
   );

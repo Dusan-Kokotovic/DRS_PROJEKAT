@@ -8,15 +8,15 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
-import Transactions from "./components/Transactions";
 import Account from "./components/Account";
 import { clearMessage } from "./store/message/actions";
 import { history } from "./helpers/history";
 import SendTransaction from "./components/SendTransaction";
 import Error from "./components/Error";
-import Withdraw from "./components/Deposit";
 import Exchange from "./components/Exchange";
 import Deposit from "./components/Deposit";
+import SentTransactions from "./components/SentTransactions";
+import ReceivedTransactions from "./components/ReceivedTransactions";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -51,16 +51,12 @@ const App = () => {
           <Route
             exact
             path="/sent"
-            element={
-              <Transactions isSentTransactions={true} history={history} />
-            }
+            element={<SentTransactions history={history} />}
           />
           <Route
             exact
             path="/received"
-            element={
-              <Transactions isSentTransactions={false} history={history} />
-            }
+            element={<ReceivedTransactions history={history} />}
           />
           <Route
             exact

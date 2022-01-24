@@ -19,14 +19,11 @@ export const sendTransaction = async (receiverEmail, coinId, amount) => {
   };
 
   return fetch(sendTransactionPath, reqOptions)
-    .then((response) => {
-      response.json();
-    })
-    .then((json) => {
-      return json;
-    })
-    .catch((error) => {
-      console.log(error);
+    .then((response) =>
+      response.json().then(({ msg }) => ({ status: response.status, msg }))
+    )
+    .then((data) => {
+      return data;
     });
 };
 

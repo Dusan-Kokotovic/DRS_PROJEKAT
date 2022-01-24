@@ -11,15 +11,17 @@ mining_time = 10
 repo = TransactionAccess()
 
 
-def __mine_transaction(q:Queue):
+def __mine_transaction(q: Queue):
     transaction_data= q.get()
 
     sender = transaction_data["sender"]
     receiver = transaction_data["receiver"]
     amount_sent = transaction_data["amount"]
     random_int = random.randint(1, 10000)
+    isValid = transaction_data['isValid']
 
-    sleep(mining_time)
+    if isValid:
+        sleep(mining_time)
 
     string = f'{sender}{receiver}{amount_sent}{random_int}'
     string = string.encode('utf-8')

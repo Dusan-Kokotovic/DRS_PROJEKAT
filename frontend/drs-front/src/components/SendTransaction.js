@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, connect } from "react-redux";
 import { getUserCoinData } from "../store/userCoinData/actions";
 import Header from "./Header";
 import { Form, Button } from "semantic-ui-react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { validateEmail } from "../helpers/validation";
 import { send } from "../store/transactionsData/actions";
+import { clearMessage } from "../store/message/actions";
 
 const Coin = ({ price, amountHeld, coinId, symbol }) => {
   return (
@@ -45,6 +46,7 @@ const SendTransaction = ({ history }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
+  const msg = useSelector((state) => state.message.message);
 
   const {
     register,
@@ -53,6 +55,7 @@ const SendTransaction = ({ history }) => {
   } = useForm();
 
   useEffect(() => {
+    dispatch(clearMessage());
     setIsLoading(true);
     dispatch(getUserCoinData()).then((success) => {
       setIsLoading(false);
@@ -60,6 +63,7 @@ const SendTransaction = ({ history }) => {
   }, []);
 
   const onFormSubmit = (data) => {
+    dispatch(clearMessage());
     let email = data.receiver;
     console.log(data);
     if (!validateEmail(email)) {
@@ -85,11 +89,7 @@ const SendTransaction = ({ history }) => {
       setMessage("");
     }
 
-    dispatch(
-      send(data.receiver, Number(data.amount), Number(data.coinId))
-    ).then((response) => {
-      console.log("Started a transaction");
-    });
+    dispatch(send(data.receiver, Number(data.amount), Number(data.coinId)));
   };
 
   return (
@@ -127,7 +127,8 @@ const SendTransaction = ({ history }) => {
               </Form.Field>
               <Button className="btn btn-primary m-2">Send</Button>
             </Form>
-            {message && <p style={{ color: "red" }}>{message}</p>}
+            {msg && <p style={{ color: "gray" }}>{msg}</p>}
+            {message && <p style={{ color: "gray" }}>{message}</p>}
           </React.Fragment>
         )
       )}
@@ -135,4 +136,11 @@ const SendTransaction = ({ history }) => {
   );
 };
 
-export default SendTransaction;
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    message: state.message ? state.message : "",
+  };
+};
+
+export default connect(mapStateToProps)(SendTransaction);

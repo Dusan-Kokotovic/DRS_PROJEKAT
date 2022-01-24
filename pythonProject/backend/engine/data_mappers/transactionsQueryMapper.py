@@ -13,7 +13,8 @@ class TransactionQueryMapper(object):
                     "timestamp": str(x.datetime),
                     "name": name,
                     "lastName": last_name,
-                    "state": x.transaction_state
+                    "state": x.transaction_state,
+                    "gas": x.gas
                 })
 
         return retval

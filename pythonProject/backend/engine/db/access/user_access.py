@@ -9,16 +9,16 @@ from ..coin_user_association import CoinUserAssociation
 from .. import database
 
 class TransactionAccess(object):
-    def start_transaction(self, sender_id, receiver_id, amount, date):
+    def start_transaction(self, sender_id, receiver_id, amount, date, gas):
             receiver = User.query.filter_by(email=receiver_id).first()
             sender = User.query.filter_by(email=sender_id).first()
-            transaction = Transaction(amount, sender.id, receiver.id, date, TransactionState.MINING)
+            transaction = Transaction(amount, sender.id, receiver.id, date, TransactionState.MINING, gas)
             database.session.add(transaction)
             database.session.commit()
 
             return transaction.base_id
 
-    def change_user_balances(self,sender,receiver_email,coin_id,amount):
+    def change_user_balances(self,sender,receiver_email,coin_id, amount):
 
             sender = User.query.filter_by(email=sender).first()
             receiver = User.query.filter_by(email=receiver_email).first()
@@ -28,6 +28,8 @@ class TransactionAccess(object):
 
             sender_coins = sender.coins.filter_by(coin_id=coin_id).first()
             sender_coins.amount -= amount
+            if(sender_coins.amount <= 0):
+                database.session.delete(sender_coins)
 
             receiver_coins = receiver.coins.filter_by(coin_id=coin_id).first()
 
@@ -50,13 +52,14 @@ class TransactionAccess(object):
             transaction.id = hash_id
             database.session.commit()
 
-    def deny_transaction(self, base_id):
+    def deny_transaction(self, base_id, hash):
 
             transaction = Transaction.query.filter_by(base_id=base_id).first()
 
             if transaction is not None:
+                transaction.id = hash
                 transaction.transaction_state = TransactionState.DENIED.name
-                database.commit()
+                database.session.commit()
 
     def get_sent_transactions(self, id: int):
         return Transaction.query.filter_by(sender_id=id).all()
@@ -145,9 +148,9 @@ class CoinAccess(object):
         assoc = self.get_user_coin_assoc(dbCoin.id,user_id)
 
         if assoc is None:
-            self.add_association(CoinUserAssociation(user_id,dbCoin.id,amount/price))
+            self.add_association(CoinUserAssociation(user_id,dbCoin.id, amount/price))
         else:
-            assoc.amount += amount
+            assoc.amount += amount/price
 
         account.amount -= amount
         database.session.commit()

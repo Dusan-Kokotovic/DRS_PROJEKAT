@@ -65,13 +65,13 @@ def verify():
     existing_card = repo.get_card(user.id)
 
     if existing_card is not None:
-        return jsonify({"msg": "Conflict"}), 409
+        return jsonify({"msg": "Card already added"}), 409
 
     date_info = expiration_date.split('-')
     date = datetime.date(int(date_info[0]), int(date_info[1]), int(date_info[2]))
 
     if not validate_card(card_number, date, security_code):
-        return jsonify({"msg": "Bad request"}), 400
+        return jsonify({"msg": "Invalid card"}), 400
 
     new_card = Card(date, card_number, security_code, name, user.id)
     repo.add_card(new_card, user.id)
@@ -104,13 +104,18 @@ def login():
     except KeyError as e:
         return jsonify({'msg': "Bad request"}), 400
 
+    print(email)
+    print(password)
+
     user = repo.get_by_email(email)
+
+    print(user.password_hash)
 
     if user is None:
         return jsonify({"msg": "User doesn't exist"}), 400
 
     if not user.check_password_correction(password):
-        return 401
+        return jsonify({"msg": "Wrong password"}), 401
 
     token = user.encode_jwt(Config.SECRET_KEY)
 
@@ -165,12 +170,12 @@ def register():
     if does_exist is not None:
         return jsonify({"msg": "Email is already taken"}), 409
 
-    new_user = User(name, last_name, password, address, city, country, email, phone)
+    new_user = User(name, last_name, User.genereate_hash(password), address, city, country, email, phone)
 
     repo.save_user(new_user)
     repo.add_account(new_user.id)
 
-    return 200
+    return jsonify({"msg": "Success"}), 200
 
 @user_controller.route('/deposit', methods=['POST'])
 def withdraw():
@@ -190,7 +195,7 @@ def withdraw():
     except KeyError:
         return jsonify({"msg": "Bad request"}), 400
 
-    repo.add_money(user.id ,float(amount))
+    repo.add_money(user.id, float(amount))
     return  jsonify({"data": "Success"}), 200
 
 @user_controller.route('/exchange', methods=['POST'])
@@ -216,7 +221,7 @@ def exchange():
     money = repo.get_user_account(user.id).amount
 
     if money < amount:
-        return jsonify({"msg": "Not enough money"}), 402
+        return jsonify({"msg": "You don't have enough money"}), 402
 
     coin_repo.handle_coin_payment(user.id, amount, coin, price)
 
@@ -225,6 +230,11 @@ def exchange():
 
 @user_controller.route('/edit', methods=['POST'])
 def edit():
+
+    user = check_logged_in(repo)
+
+    if user is False:
+        return jsonify({"msg": "Unauthorized"}), 401
 
     if not request.json:
         return jsonify({"msg": "Bad request"}), 400
@@ -260,8 +270,11 @@ def edit():
     if last_name is None or last_name == '':
         return jsonify({"msg": "Bad request"}), 400
 
+    if password != "" and len(password) < 6:
+        return jsonify({"msg": "Bad request"}), 400
+
     #on odmah u konstruktoru hesira
-    new_user = User(name, last_name, password, address, city, country, email, phone)
+    new_user = User(name, last_name, user.password_hash if password == "" else User.genereate_hash(password), address, city, country, email, phone)
 
     #pa ovde ni nema polje "password" nego vec automatski je "password_hash"
     repo.edit_user(new_user)

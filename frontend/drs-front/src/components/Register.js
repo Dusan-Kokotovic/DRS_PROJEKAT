@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactReduxContext, useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Form, Button } from "semantic-ui-react";
@@ -10,6 +10,7 @@ import {
 } from "../helpers/validation";
 
 import { registerAction } from "../store/auth/actions";
+import { clearMessage } from "../store/message/actions";
 
 const Register = ({ history }) => {
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -23,6 +24,7 @@ const Register = ({ history }) => {
   const [numberError, setNumberError] = useState("");
   const [cityError, setCityError] = useState("");
   const [countryError, setCountryError] = useState("");
+  const msg = useSelector((state) => state.message.message);
   let isError = false;
   const {
     register,
@@ -31,7 +33,7 @@ const Register = ({ history }) => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
+    dispatch(clearMessage());
     if (!validateEmail(data.email)) {
       setEmailError("Email is not valid");
       //return;
@@ -78,10 +80,8 @@ const Register = ({ history }) => {
         data.country,
         data.phone
       )
-    ).then((response) => {
-      console.log(response);
+    ).then(() => {
       history.push("/login");
-
       window.location.reload();
     });
   };
@@ -210,6 +210,7 @@ const Register = ({ history }) => {
           </Button>
         </Form>
       </div>
+      {msg && <p style={{ color: "red" }}>{msg}</p>}
     </React.Fragment>
   );
 };

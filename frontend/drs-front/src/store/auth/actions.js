@@ -14,6 +14,7 @@ import {
   userRegister,
   userEdit,
 } from "../../services/authServices/services";
+import { clearMessage, setMessage } from "../message/actions";
 
 export const login = (email, password) => (dispatch) => {
   return userLogin(email, password).then(
@@ -51,19 +52,17 @@ export const registerAction = (
     city,
     country,
     phone
-  )
-    .then((isValid) => {
-      if (isValid) {
-        dispatch({ type: REGISTER_SUCCESS });
-        return Promise.resolve();
-      } else {
-        return Promise.reject();
-      }
-    })
-    .catch((error) => {
+  ).then((response) => {
+    if (response.status === 200) {
+      dispatch({ type: REGISTER_SUCCESS });
+      dispatch(clearMessage());
+      return Promise.resolve();
+    } else {
       dispatch({ type: REGISTER_FAIL });
+      dispatch(setMessage(response.msg));
       return Promise.reject();
-    });
+    }
+  });
 };
 
 export const logout = () => {

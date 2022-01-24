@@ -60,15 +60,18 @@ const CardDataForm = ({ toggleForm }) => {
       resetMessage();
     }
 
-    dispatch(submitCardData(data.cardNumber, data.expirationDate, data.pinCode))
-      .then((response) => {
-        toggleForm();
-        dispatch({ type: VERIFICATION_SUCCESS, payload: response });
-        console.log(response);
-      })
-      .catch((error) => {
-        setErrorMessage(error);
-      });
+    if (data.pinCode != "123") {
+      setMessage("Pin Code is invalid");
+      return;
+    } else {
+      setMessage("");
+    }
+
+    dispatch(
+      submitCardData(data.cardNumber, data.expirationDate, data.pinCode)
+    ).then((response) => {
+      toggleForm();
+    });
   };
 
   return (
@@ -116,7 +119,7 @@ const CardDataForm = ({ toggleForm }) => {
         </Button>
       </div>
       {errorMessage && (
-        <p style={{ color: "red", margin: "1" }}>{errorMessage}</p>
+        <p style={{ color: "gray", margin: "1" }}>{errorMessage}</p>
       )}
     </Form>
   );
@@ -134,6 +137,7 @@ const Profile = ({ history }) => {
   const [isLoading, setLoading] = useState(false);
   const [showingVerificationForm, setShowingVerificationForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const msg = useSelector((state) => state.message.message);
 
   const toggleForm = () => {
     setShowingVerificationForm(!showingVerificationForm);
@@ -175,7 +179,7 @@ const Profile = ({ history }) => {
     dispatch(getCurrentUserInfo()).then((response) => {
       setLoading(false);
     });
-  }, []);
+  }, [user.isVerified]);
 
   const handleVerification = () => {
     toggleForm();
@@ -191,6 +195,15 @@ const Profile = ({ history }) => {
               <strong>Loading user data </strong>
             ) : (
               <div className="card-body">
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Balance</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <p style={{ fontWeight: "450" }}>{user.money} $</p>
+                  </div>
+                </div>
+                <hr />
                 <div className="row">
                   <div className="col-sm-3">
                     <p className="mb-0">Email</p>
@@ -326,6 +339,7 @@ const Profile = ({ history }) => {
                   </div>
                 </div>
                 <hr />
+
                 {isEditing && (
                   <>
                     <div className="row">
@@ -349,15 +363,6 @@ const Profile = ({ history }) => {
                       </div>
                     </div>
                     <hr />
-                    {/* <div className="row">
-                      <div className="col-sm-3">
-                        <p className="mb-0">Confirm Password</p>
-                      </div>
-                      <div className="col-sm-9">
-                        <input defaultValue={user.password} style={isEditing ? {"fontWeight": "450"} : {"pointerEvents": "none", "border": "none", "fontWeight": "450"}} id="passwordInput" />
-                      </div>
-                    </div>
-                    <hr /> */}
                   </>
                 )}
               </div>
@@ -381,8 +386,14 @@ const Profile = ({ history }) => {
             )}
           </h3>
         </header>
+        {!user.isVerified && (
+          <Button className="btn btn-primary" onClick={toggleForm}>
+            Verify
+          </Button>
+        )}
+        {showingVerificationForm && <CardDataForm toggleForm={toggleForm} />}
       </div>
-      {showingVerificationForm && <CardDataForm toggleForm={toggleForm} />}
+      {msg && <p style={{ color: "gray" }}>{msg}</p>}
     </React.Fragment>
   );
 };

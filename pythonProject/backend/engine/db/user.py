@@ -7,10 +7,10 @@ import jwt
 
 class User(db.Model, UserMixin):
 
-    def __init__(self, name, last_name, password, address, city, country, email, phone):
+    def __init__(self, name, last_name, password_hash, address, city, country, email, phone):
         self.name = name
         self.last_name = last_name
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = password_hash
         self.address = address
         self.city = city
         self.country = country
@@ -65,4 +65,6 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f'User:{self.name} {self.last_name}'
 
-
+    @staticmethod
+    def genereate_hash(plaintext_password):
+        return generate_password_hash(plaintext_password)
