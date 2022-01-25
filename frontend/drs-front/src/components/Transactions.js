@@ -3,11 +3,7 @@ import { useDispatch } from "react-redux";
 import { Button } from "semantic-ui-react";
 import TransactionsFilterForm from "./TransactionsFilterForm";
 
-import {
-  getSentTransactions,
-  getReceivedTransactions,
-  filter,
-} from "../store/transactionsData/actions";
+import { filter } from "../store/transactionsData/actions";
 import { __baseUrl } from "../services/apiUrls";
 
 const Transactions = ({ array, isSentTransactions }) => {

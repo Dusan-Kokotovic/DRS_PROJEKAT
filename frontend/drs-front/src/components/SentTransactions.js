@@ -4,11 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "./Header";
 
-import {
-  getSentTransactions,
-  getReceivedTransactions,
-  filter,
-} from "../store/transactionsData/actions";
+import { getSentTransactions } from "../store/transactionsData/actions";
 
 const SentTransactions = ({ history }) => {
   const { isLoggedIn } = useSelector((state) => state.auth);

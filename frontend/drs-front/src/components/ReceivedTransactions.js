@@ -31,7 +31,7 @@ const ReceivedTransactions = ({ history }) => {
           <b>Loading data...</b>
         </p>
       ) : (
-        <Transactions isSentTransactions={true} array={transactions} />
+        <Transactions isSentTransactions={false} array={transactions} />
       )}
     </React.Fragment>
   );
