@@ -57,7 +57,6 @@ def received():
         date_from = req_json['dateFrom']
 
         transactions = transaction_repo.filter_received_transactions(user.id, name, amount_to, amount_from, date_from, date_to)
-        print(transactions)
         retval = transactionsMapper.map_transaction_user_array(transactions, True)
         return jsonify({'data': retval}), 200
     elif request.method == 'GET':

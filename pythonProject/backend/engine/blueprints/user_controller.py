@@ -104,12 +104,7 @@ def login():
     except KeyError as e:
         return jsonify({'msg': "Bad request"}), 400
 
-    print(email)
-    print(password)
-
     user = repo.get_by_email(email)
-
-    print(user.password_hash)
 
     if user is None:
         return jsonify({"msg": "User doesn't exist"}), 400
@@ -209,7 +204,6 @@ def exchange():
         return jsonify({"msg": "Bad request"}), 400
 
     data = request.get_json()
-    print(data)
 
     try:
         amount = data['amount']
