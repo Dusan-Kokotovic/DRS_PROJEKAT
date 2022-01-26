@@ -1,0 +1,13 @@
+- ako su baza i back na istom racnaru
+    - pri pokretanju nakaciti back na drs-network mrezu jer je baza vec na njoj
+    - u app config u konekcionom stringu umesto trenutne ip adrese staviti naziv kontejnera baze
+
+- ako baza i back nisu na istom racunaru
+    -u app config u konekcionom stringu umesto trenutno ip adrese staviti ip adresu racunara na kom je baza
+
+v1:
+    docker run -d -p 5000:5000 --network drs-network --name back drs-back
+
+v2:
+    docker run -d -p 5000:5000 --name back drs-back
+    

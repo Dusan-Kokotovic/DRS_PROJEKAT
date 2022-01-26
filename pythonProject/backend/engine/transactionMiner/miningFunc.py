@@ -7,7 +7,7 @@ from engine.db.access.user_access import TransactionAccess
 from multiprocessing import Queue
 
 
-mining_time = 10
+mining_time = 300
 repo = TransactionAccess()
 
 
